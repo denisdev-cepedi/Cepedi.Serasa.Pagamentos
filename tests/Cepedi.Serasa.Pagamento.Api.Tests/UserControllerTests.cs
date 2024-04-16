@@ -1,13 +1,13 @@
-﻿using Cepedi.Serasa.Pagamento.WebApi.Controllers;
-using Cepedi.Shareable.Requests;
-using Cepedi.Shareable.Responses;
+﻿using Cepedi.Serasa.Pagamento.Api.Controllers;
+using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
+using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NSubstitute;
 using OperationResult;
 
-namespace Cepedi.Serasa.Pagamento.WebApi.Tests
+namespace Cepedi.Serasa.Pagamento.Api.Tests
 {
     public class UserControllerTests
     {
