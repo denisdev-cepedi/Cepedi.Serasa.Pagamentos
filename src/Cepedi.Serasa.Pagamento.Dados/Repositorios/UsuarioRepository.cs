@@ -1,9 +1,8 @@
-using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cepedi.Serasa.Pagamento.Data.Repositories
+namespace Cepedi.Serasa.Pagamento.Dados.Repositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {
@@ -27,7 +26,7 @@ namespace Cepedi.Serasa.Pagamento.Data.Repositories
         public async Task<UsuarioEntity> CriarUsuarioAsync(UsuarioEntity usuario)
         {
             _context.Usuario.Add(usuario);
-            
+
             await _context.SaveChangesAsync();
 
             return usuario;

@@ -1,8 +1,8 @@
-﻿using Cepedi.Serasa.Pagamento.Domain;
+﻿using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Cepedi.Serasa.Pagamento.Data.EntityTypeConfiguration;
+namespace Cepedi.Serasa.Pagamento.Dados.EntityTypeConfiguration;
 
 public class CredorEntityTypeConfiguration : IEntityTypeConfiguration<CredorEntity>
 {

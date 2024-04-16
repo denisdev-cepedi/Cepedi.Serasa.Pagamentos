@@ -1,4 +1,4 @@
-﻿namespace Cepedi.Serasa.Pagamento.Domain;
+﻿namespace Cepedi.Serasa.Pagamento.Dominio.Entidades;
 
 public class CredorEntity
 {
