@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Cepedi.Serasa.Pagamento.Dados;
-using Cepedi.Serasa.Pagamento.Data.Repositories;
+using Cepedi.Serasa.Pagamento.Dados.Repositories;
 using Cepedi.Serasa.Pagamento.Dominio;
 using Cepedi.Serasa.Pagamento.Dominio.Pipelines;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
