@@ -1,5 +1,5 @@
-﻿using Cepedi.Serasa.Pagamento.Data;
-using Cepedi.Serasa.Pagamento.Domain.Entities;
+﻿using Cepedi.Serasa.Pagamento.Dados;
+using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

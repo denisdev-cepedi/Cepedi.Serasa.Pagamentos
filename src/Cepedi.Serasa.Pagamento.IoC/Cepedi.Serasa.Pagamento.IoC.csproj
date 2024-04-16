@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cepedi.Serasa.Pagamento.Data\Cepedi.Serasa.Pagamento.Data.csproj" />
-    <ProjectReference Include="..\Cepedi.Serasa.Pagamento.Domain\Cepedi.Serasa.Pagamento.Domain.csproj" />
-    <ProjectReference Include="..\Cepedi.Serasa.Pagamento.Shareable\Cepedi.Serasa.Pagamento.Shareable.csproj" />
+    <ProjectReference Include="..\Cepedi.Serasa.Pagamento.Dados\Cepedi.Serasa.Pagamento.Dados.csproj" />
+    <ProjectReference Include="..\Cepedi.Serasa.Pagamento.Dominio\Cepedi.Serasa.Pagamento.Dominio.csproj" />
+    <ProjectReference Include="..\Cepedi.Serasa.Pagamento.Compartilhado\Cepedi.Serasa.Pagamento.Compartilhado.csproj" />
   </ItemGroup>
 
 </Project>
