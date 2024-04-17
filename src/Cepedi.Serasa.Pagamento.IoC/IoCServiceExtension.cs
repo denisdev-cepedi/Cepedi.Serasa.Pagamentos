@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Cepedi.Serasa.Pagamento.Dados;
-using Cepedi.Serasa.Pagamento.Data.Repositories;
-using Cepedi.Serasa.Pagamento.Domain.Pipelines;
+using Cepedi.Serasa.Pagamento.Dados.Repositories;
 using Cepedi.Serasa.Pagamento.Dominio;
+using Cepedi.Serasa.Pagamento.Dominio.Pipelines;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
 using FluentValidation;
 using MediatR;
@@ -18,7 +18,7 @@ namespace Cepedi.Serasa.Pagamento.IoC
         public static void ConfigureAppDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             ConfigureDbContext(services, configuration);
-            services.AddMediatR(cfg => 
+            services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ExcecaoPipeline<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidacaoComportamento<,>));

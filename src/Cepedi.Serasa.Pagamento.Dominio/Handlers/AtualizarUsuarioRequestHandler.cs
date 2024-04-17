@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
+﻿using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
 using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using MediatR;
