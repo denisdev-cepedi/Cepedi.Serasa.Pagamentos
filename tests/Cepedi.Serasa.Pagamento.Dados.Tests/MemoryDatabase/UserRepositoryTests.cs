@@ -1,4 +1,4 @@
-using Cepedi.Serasa.Pagamento.Data.Repositories;
+using Cepedi.Serasa.Pagamento.Dados.Repositories;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Microsoft.EntityFrameworkCore;
 
