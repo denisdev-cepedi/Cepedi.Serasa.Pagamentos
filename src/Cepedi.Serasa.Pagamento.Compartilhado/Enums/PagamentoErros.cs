@@ -30,4 +30,11 @@ public class PagamentoErros
         Descricao = "Os dados enviados na requisição são inválidos",
         Tipo = ETipoErro.Erro
     };
+
+    public static ResultadoErro ErroAoEfetuarPagamento = new()
+    {
+        Titulo = "Erro ao efetuar o pagamento",
+        Descricao = "Ocorreu um erro ao efetuar o pagamento. Por favor, verifique os dados e tente novamente",
+        Tipo = ETipoErro.Erro
+    };
 }
