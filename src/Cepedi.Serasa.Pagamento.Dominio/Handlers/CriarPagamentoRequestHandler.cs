@@ -22,32 +22,23 @@ public class CriarPagamentoRequestHandler
 
     public async Task<Result<CriarPagamentoResponse>> Handle(CriarPagamentoRequest request, CancellationToken cancellationToken)
     {
-        try
+        var credorEntity = await _pagamentoRepository.ObterCredorPagamentoAsync(request.IdCredor);
+
+        var pagamento = new PagamentoEntity()
         {
-            var credorEntity = await _pagamentoRepository.ObterCredorPagamentoAsync(request.IdCredor);
+            Valor = request.Valor,
 
-            var pagamento = new PagamentoEntity()
-            {
-                Valor = request.Valor,
+            DataDePagamento = request.DataDePagamento,
 
-                DataDePagamento = request.DataDePagamento,
+            DataDeVencimento = request.DataDeVencimento,
 
-                DataDeVencimento = request.DataDeVencimento,
+            IdCredor = request.IdCredor,
 
-                IdCredor = request.IdCredor,
+            Credor = credorEntity
+        };
 
-                Credor = credorEntity
-            };
+        await _pagamentoRepository.CriarPagamentoAsync(pagamento);
 
-            await _pagamentoRepository.CriarPagamentoAsync(pagamento);
-
-            return Result.Success(new CriarPagamentoResponse(pagamento.Id, pagamento.Valor));
-        }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro durante a execução");
-            return Result.Error<CriarPagamentoResponse>(new Compartilhado.Excecoes.ExcecaoAplicacao(
-                (PagamentoErros.ErroAoEfetuarPagamento)));
-        }
+        return Result.Success(new CriarPagamentoResponse(pagamento.Id, pagamento.Valor));
     }
 }

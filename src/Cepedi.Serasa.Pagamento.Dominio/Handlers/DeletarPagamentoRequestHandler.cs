@@ -20,25 +20,16 @@ public class DeletarPagamentoRequestHandler :
 
     public async Task<Result<DeletarPagamentoResponse>> Handle(DeletarPagamentoRequest request, CancellationToken cancellationToken)
     {
-        try
+        var pagamentoEntity = await _pagamentoRepository.ObterPagamentoAsync(request.Id);
+
+        if (pagamentoEntity == null)
         {
-            var pagamentoEntity = await _pagamentoRepository.ObterPagamentoAsync(request.Id);
-
-            if (pagamentoEntity == null)
-            {
-                return Result.Error<DeletarPagamentoResponse>(new Compartilhado.
-                    Excecoes.SemResultadosException());
-            }
-
-            await _pagamentoRepository.DeletarPagamentoAsync(pagamentoEntity.Id);
-
-            return Result.Success(new DeletarPagamentoResponse(pagamentoEntity.Id));
-
+            return Result.Error<DeletarPagamentoResponse>(new Compartilhado.
+                Excecoes.SemResultadosException());
         }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro ao deletar o pagamento");
-            throw;
-        }
+
+        await _pagamentoRepository.DeletarPagamentoAsync(pagamentoEntity.Id);
+
+        return Result.Success(new DeletarPagamentoResponse(pagamentoEntity.Id));
     }
 }

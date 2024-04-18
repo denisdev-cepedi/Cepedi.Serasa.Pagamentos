@@ -20,26 +20,18 @@ public class AtualizarPagamentoRequestHandler :
 
     public async Task<Result<AtualizarPagamentoResponse>> Handle(AtualizarPagamentoRequest request, CancellationToken cancellationToken)
     {
-        try
+        var pagamentoEntity = await _pagamentoRepository.ObterPagamentoAsync(request.Id);
+
+        if (pagamentoEntity == null)
         {
-            var pagamentoEntity = await _pagamentoRepository.ObterPagamentoAsync(request.Id);
-
-            if (pagamentoEntity == null)
-            {
-                return Result.Error<AtualizarPagamentoResponse>(new Compartilhado.
-                    Excecoes.SemResultadosException());
-            }
-
-            pagamentoEntity.AtualizarValor(request.Valor);
-
-            await _pagamentoRepository.AtualizarPagamentoAsync(pagamentoEntity);
-
-            return Result.Success(new AtualizarPagamentoResponse(pagamentoEntity.Valor));
+            return Result.Error<AtualizarPagamentoResponse>(new Compartilhado.
+                Excecoes.SemResultadosException());
         }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro ao atualizar o pagamento");
-            throw;
-        }
+
+        pagamentoEntity.AtualizarValor(request.Valor);
+
+        await _pagamentoRepository.AtualizarPagamentoAsync(pagamentoEntity);
+
+        return Result.Success(new AtualizarPagamentoResponse(pagamentoEntity.Valor));
     }
 }

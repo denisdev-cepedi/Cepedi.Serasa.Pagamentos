@@ -20,23 +20,15 @@ public class ObterPagamentoRequestHandler :
 
     public async Task<Result<ObterPagamentoResponse>> Handle(ObterPagamentoRequest request, CancellationToken cancellationToken)
     {
-        try
+        var pagamentoEntity = await _pagamentoRepository.ObterPagamentoAsync(request.Id);
+
+        if (pagamentoEntity == null)
         {
-            var pagamentoEntity = await _pagamentoRepository.ObterPagamentoAsync(request.Id);
-
-            if (pagamentoEntity == null)
-            {
-                return Result.Error<ObterPagamentoResponse>(new Compartilhado.
-                    Excecoes.SemResultadosException());
-            }
-
-            return Result.Success(new ObterPagamentoResponse(pagamentoEntity.Valor));
-
+            return Result.Error<ObterPagamentoResponse>(new Compartilhado.
+                Excecoes.SemResultadosException());
         }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro ao obter o pagamento");
-            throw;
-        }
+
+        return Result.Success(new ObterPagamentoResponse(pagamentoEntity.Valor));
+
     }
 }
