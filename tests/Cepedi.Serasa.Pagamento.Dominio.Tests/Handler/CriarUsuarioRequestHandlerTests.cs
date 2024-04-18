@@ -27,7 +27,7 @@ public class CriarUsuarioRequestHandlerTests
     public async Task CriarUsuarioAsync_QuandoCriar_DeveRetornarSucesso()
     {
         //Arrange 
-        var usuario = new CriarUsuarioRequest { Nome= "Denis" };
+        var usuario = new CriarUsuarioRequest { Nome = "Denis" };
         _usuarioRepository.CriarUsuarioAsync(It.IsAny<UsuarioEntity>())
             .ReturnsForAnyArgs(new UsuarioEntity());
 
@@ -40,5 +40,4 @@ public class CriarUsuarioRequestHandlerTests
         result.Should().BeOfType<Result<CriarUsuarioResponse>>().Which
             .Value.nome.Should().NotBeEmpty();
     }
-
 }
