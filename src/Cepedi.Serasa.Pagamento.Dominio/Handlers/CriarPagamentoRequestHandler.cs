@@ -28,8 +28,6 @@ public class CriarPagamentoRequestHandler
 
             var pagamento = new PagamentoEntity()
             {
-                Id = request.Id,
-
                 Valor = request.Valor,
 
                 DataDePagamento = request.DataDePagamento,

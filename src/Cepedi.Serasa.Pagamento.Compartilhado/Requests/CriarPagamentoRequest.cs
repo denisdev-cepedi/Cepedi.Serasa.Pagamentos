@@ -5,8 +5,7 @@ using OperationResult;
 namespace Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 public class CriarPagamentoRequest : IRequest<Result<CriarPagamentoResponse>>
 {
-    public int Id { get; set; }
-    public double Valor { get; set; } = default!;
+    public double Valor { get; set; }
 
     public DateTime DataDePagamento { get; set; }
 

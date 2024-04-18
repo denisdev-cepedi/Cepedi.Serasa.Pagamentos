@@ -6,7 +6,7 @@ namespace Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 public class AtualizarPagamentoRequest : IRequest<Result<AtualizarPagamentoResponse>>
 {
     public int Id { get; set; }
-    public double Valor { get; set; } = default!;
+    public double Valor { get; set; }
 
     public DateTime DataDePagamento { get; set; }
 
