@@ -46,4 +46,5 @@ public class PagamentoController : BaseController
     [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<DeletarPagamentoResponse>> DeletarPagamentoAsync(
         [FromRoute] DeletarPagamentoRequest request) => await SendCommand(request);
+
 }
