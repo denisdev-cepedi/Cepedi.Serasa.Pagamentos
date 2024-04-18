@@ -48,5 +48,21 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
             return await
                 _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
         }
+
+        public async Task<PagamentoEntity> DeletarPagamentoAsync(int id)
+        {
+            var pagamentoEntity = await ObterPagamentoAsync(id);
+
+            if (pagamentoEntity == null)
+            {
+                return null;
+            }
+
+            _context.Pagamento.Remove(pagamentoEntity);
+
+            await _context.SaveChangesAsync();
+
+            return pagamentoEntity;
+        }
     }
 }

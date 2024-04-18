@@ -41,10 +41,10 @@ public class PagamentoController : BaseController
     public async Task<ActionResult<ObterPagamentoResponse>> ObterPagamentoAsync(
         [FromRoute] ObterPagamentoRequest request) => await SendCommand(request);
 
-    // [HttpDelete("{id}")]
-    // [ProducesResponseType(typeof(DeletarPagamentoResponse), StatusCodes.Status200OK)]
-    // [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
-    // [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status204NoContent)]
-    // public async Task<ActionResult<DeletarPagamentoResponse>> DeletarPagamentoAsync(
-    //     [FromRoute] DeletarPagamentoRequest request) => await SendCommand(request);
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(DeletarPagamentoResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status204NoContent)]
+    public async Task<ActionResult<DeletarPagamentoResponse>> DeletarPagamentoAsync(
+        [FromRoute] DeletarPagamentoRequest request) => await SendCommand(request);
 }
