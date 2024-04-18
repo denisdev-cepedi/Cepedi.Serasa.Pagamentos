@@ -21,7 +21,6 @@ public class PagamentoController : BaseController
         _mediator = mediator;
     }
 
-
     [HttpPost]
     [ProducesResponseType(typeof(CriarPagamentoResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
