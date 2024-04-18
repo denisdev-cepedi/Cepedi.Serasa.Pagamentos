@@ -43,5 +43,4 @@ public class AtualizarPagamentoRequestHandlerTests
         result.Should().BeOfType<Result<AtualizarPagamentoResponse>>().Which
             .Value.valor.Should().Be(pagamentoEntity.Valor);
     }
-
 }
