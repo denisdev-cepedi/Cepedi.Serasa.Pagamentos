@@ -8,6 +8,6 @@ public class CredorEntity
 
     internal void Atualizar(string nome)
     {
-        throw new NotImplementedException();
+        Nome = nome;
     }
 }

@@ -35,4 +35,16 @@ public class CredorController : BaseController
     public async Task<ActionResult<AtualizarCredorResponse>> AtualizarCredorAsync(
         [FromBody] AtualizarCredorRequest request) => await SendCommand(request);
 
+    [HttpGet]
+    [ProducesResponseType(typeof(ObterCredorResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ObterCredorResponse>> ObterCredorAsync(
+        [FromQuery] ObterCredorRequest request) => await SendCommand(request);
+
+    [HttpDelete]
+    [ProducesResponseType(typeof(ExcluirCredorResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ExcluirCredorResponse>> ExcluirCredorAsync(
+        [FromQuery] ExcluirCredorRequest request) => await SendCommand(request);
+
 }

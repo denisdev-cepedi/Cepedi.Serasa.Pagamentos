@@ -11,7 +11,13 @@ public class CredorRepository : ICredorRepository
     {
         _context = context;
     }
-
+    
+    public async Task<CredorEntity> CriarCredorAsync(CredorEntity Credor)
+    {
+        _context.Credor.Add(Credor);
+        await _context.SaveChangesAsync();
+        return Credor;
+    }
     public async Task<CredorEntity> AtualizarCredorAsync(CredorEntity Credor)
     {
         _context.Credor.Update(Credor);
@@ -21,22 +27,14 @@ public class CredorRepository : ICredorRepository
         return Credor;
     }
 
-    public async Task<CredorEntity> CriarCredorAsync(CredorEntity Credor)
-    {
-        _context.Credor.Add(Credor);
-        await _context.SaveChangesAsync();
-        return Credor;
-    }
-
-    public async Task<List<CredorEntity>> GetCredorsAsync()
+    public async Task<List<CredorEntity>> ObterCredorsAsync()
     {
         return await _context.Credor.ToListAsync();
     }
 
     public async Task<CredorEntity> ObterCredorAsync(int id)
     {
-        return await
-                _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
+        return await _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
     }
 }
 

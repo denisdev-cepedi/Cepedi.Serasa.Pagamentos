@@ -37,7 +37,7 @@ public class CriarCredorRequestHandler
         {
             _logger.LogError("Ocorreu um erro durante a execução");
             return Result.Error<CriarCredorResponse>(new Compartilhado.Excecoes.ExcecaoAplicacao(
-                (PagamentoErros.ErroGravacaoCredor)));
+                PagamentoErros.ErroGravacaoCredor));
         }
     }
 }
