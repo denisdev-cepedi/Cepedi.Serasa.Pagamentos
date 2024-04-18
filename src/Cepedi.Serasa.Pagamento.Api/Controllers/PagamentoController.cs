@@ -5,6 +5,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cepedi.Serasa.Pagamento.Api.Controllers;
+
+[ApiController]
+[Route("[controller]")]
 public class PagamentoController : BaseController
 {
     private readonly ILogger<PagamentoController> _logger;
