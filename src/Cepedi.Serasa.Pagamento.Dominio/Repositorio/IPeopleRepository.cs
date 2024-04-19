@@ -7,4 +7,5 @@ public interface IPessoaRepository
     Task<PessoaEntity> CriarPessoaAsync(PessoaEntity pessoa);
     Task<PessoaEntity> ObterPessoaAsync(int id);
     Task<PessoaEntity> AtualizarPessoaAsync(PessoaEntity pessoa);
+    Task<PessoaEntity> DeletarPessoaAsync(int id);
 }

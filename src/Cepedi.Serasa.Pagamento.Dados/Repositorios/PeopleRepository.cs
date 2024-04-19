@@ -28,6 +28,16 @@ public class PessoaRepository : IPessoaRepository
         return pessoa;
     }
 
+    public async Task<PessoaEntity?> DeletarPessoaAsync(int id)
+    {
+        var pessoaEntity = await ObterPessoaAsync(id);
+        if (pessoaEntity == null) return null;
+
+        _context.Pessoa.Remove(pessoaEntity);
+        await _context.SaveChangesAsync();
+        return pessoaEntity;
+    }
+
     public async Task<List<PessoaEntity>> GetPessoasAsync()
     {
         return await _context.Pessoa.ToListAsync();

@@ -30,4 +30,23 @@ public class PessoaController : BaseController
     [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status204NoContent)]
     public async Task<ActionResult<AtualizarPessoaResponse>> AtualizarPessoaAsync(
         [FromBody] AtualizarPessoaRequest request) => await SendCommand(request);
+
+    // [HttpGet]
+    // [ProducesResponseType(typeof(ObterPessoasResponse), StatusCodes.Status200OK)]
+    // [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
+    // public async Task<ActionResult<ObterPessoasResponse>> ObterPessoasAsync(
+    //     [FromRoute] ObterPessoasRequest request) => await SendCommand(request);
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ObterPessoaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ObterPessoaResponse>> ObterPessoaAsync(
+        [FromRoute] ObterPessoaRequest request) => await SendCommand(request);
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(DeletarPessoaResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status204NoContent)]
+    public async Task<ActionResult<DeletarPessoaResponse>> DeletarPessoaAsync(
+        [FromRoute] DeletarPessoaRequest request) => await SendCommand(request);
 }
