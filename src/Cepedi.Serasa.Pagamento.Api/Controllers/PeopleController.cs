@@ -37,13 +37,13 @@ public class PessoaController : BaseController
     // public async Task<ActionResult<ObterPessoasResponse>> ObterPessoasAsync(
     //     [FromRoute] ObterPessoasRequest request) => await SendCommand(request);
 
-    [HttpGet("{id}")]
+    [HttpGet("{Id}")]
     [ProducesResponseType(typeof(ObterPessoaResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ObterPessoaResponse>> ObterPessoaAsync(
         [FromRoute] ObterPessoaRequest request) => await SendCommand(request);
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{Id}")]
     [ProducesResponseType(typeof(DeletarPessoaResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status204NoContent)]
