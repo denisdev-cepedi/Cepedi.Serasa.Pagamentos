@@ -36,5 +36,10 @@ public class CredorRepository : ICredorRepository
     {
         return await _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
     }
+
+    public async Task<CredorEntity> ExcluirCredorAsync(int id)
+    {
+        return await _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
+    }
 }
 

@@ -5,7 +5,7 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Repositorio;
 public interface ICredorRepository
 {
     Task<CredorEntity> CriarCredorAsync(CredorEntity Credor);
-    Task<CredorEntity> ObterCredorAsync(int id);
+    Task<CredorEntity> ObterCredorAsync(CredorEntity id);
     Task<CredorEntity> AtualizarCredorAsync(CredorEntity Credor);
-    Task<CredorEntity> DeletarCredorAsync(int id);
+    Task<CredorEntity> ExcluirCredorAsync(CredorEntity Credor);
 }

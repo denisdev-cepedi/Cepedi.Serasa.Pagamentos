@@ -10,4 +10,9 @@ public class CredorEntity
     {
         Nome = nome;
     }
+
+    internal void Excluir(string nome)
+    {
+        Nome = nome;
+    }
 }
