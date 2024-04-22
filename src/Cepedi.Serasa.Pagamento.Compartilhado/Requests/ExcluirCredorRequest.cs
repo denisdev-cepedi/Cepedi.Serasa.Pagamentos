@@ -6,6 +6,6 @@ namespace Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 
 public class ExcluirCredorRequest : IRequest<Result<ExcluirCredorResponse>>
 {
-    public string Nome { get; set; } = default!;
+    public int Id { get; set; }
 
 }

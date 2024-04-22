@@ -20,26 +20,19 @@ public class AtualizarCredorRequestHandler :
     //modificar
     public async Task<Result<AtualizarCredorResponse>> Handle(AtualizarCredorRequest request, CancellationToken cancellationToken)
     {
-        try
+
+        var CredorEntity = await _CredorRepository.ObterCredorAsync(request.Id);
+
+        if (CredorEntity == null)
         {
-            var CredorEntity = await _CredorRepository.ObterCredorAsync(request.Id);
-
-            if (CredorEntity == null)
-            {
-                return Result.Error<AtualizarCredorResponse>(new Compartilhado.
-                    Excecoes.SemResultadosException());
-            }
-
-            CredorEntity.Atualizar(request.Nome);
-
-            await _CredorRepository.AtualizarCredorAsync(CredorEntity);
-
-            return Result.Success(new AtualizarCredorResponse(CredorEntity.Nome));
+            return Result.Error<AtualizarCredorResponse>(new Compartilhado.
+                Excecoes.SemResultadosException());
         }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro ao atualizar os usuários");
-            throw;
-        }
+
+        CredorEntity.Atualizar(request.Nome);
+
+        await _CredorRepository.AtualizarCredorAsync(CredorEntity);
+
+        return Result.Success(new AtualizarCredorResponse(CredorEntity.Nome));
     }
 }

@@ -6,6 +6,6 @@ namespace Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 
 public class ObterCredorRequest : IRequest<Result<ObterCredorResponse>>
 {
-    public string Nome { get; set; } = default!;
+    public int Id { get; set; } = default!;
 
 }

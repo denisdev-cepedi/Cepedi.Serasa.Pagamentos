@@ -20,26 +20,16 @@ public class ObterCredorRequestHandler :
 
     public async Task<Result<ObterCredorResponse>> Handle(ObterCredorRequest request, CancellationToken cancellationToken)
     {
-        try
+
+        var CredorEntity = await _CredorRepository.ObterCredorAsync(request.Id);
+
+        if (CredorEntity == null)
         {
-            var CredorEntity = await _CredorRepository.ObterCredorAsync(request.Id);
-
-            if (CredorEntity == null)
-            {
-                return Result.Error<ObterCredorResponse>(new Compartilhado.
-                    Excecoes.SemResultadosException());
-            }
-
-            CredorEntity.Obter(request.Nome);
-
-            await _CredorRepository.ObterCredorAsync(CredorEntity);
-
-            return Result.Success(new ObterCredorResponse(CredorEntity.Nome));
+            return Result.Error<ObterCredorResponse>(new Compartilhado.
+                Excecoes.SemResultadosException());
         }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro ao Obter os usuários");
-            throw;
-        }
+
+        return Result.Success(new ObterCredorResponse(CredorEntity.Nome));
+
     }
 }

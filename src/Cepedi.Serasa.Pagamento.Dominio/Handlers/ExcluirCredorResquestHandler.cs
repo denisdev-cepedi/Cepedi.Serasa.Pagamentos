@@ -9,37 +9,28 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class ExcluirCredorRequestHandler :
     IRequestHandler<ExcluirCredorRequest, Result<ExcluirCredorResponse>>
 {
-    private readonly ICredorRepository _CredorRepository;
+    private readonly ICredorRepository _credorRepository;
     private readonly ILogger<ExcluirCredorRequestHandler> _logger;
 
     public ExcluirCredorRequestHandler(ICredorRepository CredorRepository, ILogger<ExcluirCredorRequestHandler> logger)
     {
-        _CredorRepository = CredorRepository;
+        _credorRepository = CredorRepository;
         _logger = logger;
     }
 
     public async Task<Result<ExcluirCredorResponse>> Handle(ExcluirCredorRequest request, CancellationToken cancellationToken)
     {
-        try
+        var CredorEntity = await _credorRepository.ObterCredorAsync(request.Id);
+
+        if (CredorEntity == null)
         {
-            var CredorEntity = await _CredorRepository.ExcluirCredorAsync(request.Id);
-
-            if (CredorEntity == null)
-            {
-                return Result.Error<ExcluirCredorResponse>(new Compartilhado.
-                    Excecoes.SemResultadosException());
-            }
-
-            CredorEntity.Excluir(request.Nome);
-
-            await _CredorRepository.ExcluirCredorAsync(CredorEntity);
-
-            return Result.Success(new ExcluirCredorResponse(CredorEntity.Nome));
+            return Result.Error<ExcluirCredorResponse>(new Compartilhado.
+                Excecoes.SemResultadosException());
         }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro ao Excluir os usuários");
-            throw;
-        }
+
+        await _credorRepository.ExcluirCredorAsync(CredorEntity.Id);
+
+        return Result.Success(new ExcluirCredorResponse(CredorEntity.Nome));
+
     }
 }

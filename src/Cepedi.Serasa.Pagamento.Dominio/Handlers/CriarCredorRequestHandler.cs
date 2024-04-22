@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using OperationResult;
 
 namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
-public class CriarCredorRequestHandler 
+public class CriarCredorRequestHandler
     : IRequestHandler<CriarCredorRequest, Result<CriarCredorResponse>>
 {
     private readonly ILogger<CriarCredorRequestHandler> _logger;
@@ -22,22 +22,15 @@ public class CriarCredorRequestHandler
 
     public async Task<Result<CriarCredorResponse>> Handle(CriarCredorRequest request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var Credor = new CredorEntity()
-            {
-                Nome = request.Nome,
-            };
 
-            await _CredorRepository.CriarCredorAsync(Credor);
-
-            return Result.Success(new CriarCredorResponse(Credor.Id, Credor.Nome));
-        }
-        catch
+        var Credor = new CredorEntity()
         {
-            _logger.LogError("Ocorreu um erro durante a execução");
-            return Result.Error<CriarCredorResponse>(new Compartilhado.Excecoes.ExcecaoAplicacao(
-                PagamentoErros.ErroGravacaoCredor));
-        }
+            Nome = request.Nome,
+        };
+
+        await _CredorRepository.CriarCredorAsync(Credor);
+
+        return Result.Success(new CriarCredorResponse(Credor.Id, Credor.Nome));
+
     }
 }
