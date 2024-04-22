@@ -17,7 +17,7 @@ public class AtualizarCredorRequestHandler :
         _CredorRepository = CredorRepository;
         _logger = logger;
     }
-
+    //modificar
     public async Task<Result<AtualizarCredorResponse>> Handle(AtualizarCredorRequest request, CancellationToken cancellationToken)
     {
         try
