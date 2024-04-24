@@ -24,10 +24,24 @@ public class PagamentoErros
         Tipo = ETipoErro.Erro
     };
 
+    public static ResultadoErro ErroGravacaoCredor = new()
+    {
+        Titulo = "Ocorreu um erro na gravação",
+        Descricao = "Ocorreu um erro na gravação do usuário. Por favor tente novamente",
+        Tipo = ETipoErro.Erro
+    };
+
     public static ResultadoErro DadosInvalidos = new()
     {
         Titulo = "Dados inválidos",
         Descricao = "Os dados enviados na requisição são inválidos",
+        Tipo = ETipoErro.Erro
+    };
+
+    public static ResultadoErro ErroAoEfetuarPagamento = new()
+    {
+        Titulo = "Erro ao efetuar o pagamento",
+        Descricao = "Ocorreu um erro ao efetuar o pagamento. Por favor, verifique os dados e tente novamente",
         Tipo = ETipoErro.Erro
     };
 }
