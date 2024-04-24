@@ -7,7 +7,7 @@ namespace Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 public class AtualizarUsuarioRequest : IRequest<Result<AtualizarUsuarioResponse>>
 {
     public int Id { get; set; }
-    
+
     public string Nome { get; set; } = default!;
 
     public DateTime DataNascimento { get; set; }
