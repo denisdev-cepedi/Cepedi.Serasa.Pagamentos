@@ -20,26 +20,20 @@ public class AtualizarUsuarioRequestHandler :
 
     public async Task<Result<AtualizarUsuarioResponse>> Handle(AtualizarUsuarioRequest request, CancellationToken cancellationToken)
     {
-        try
+
+        var usuarioEntity = await _usuarioRepository.ObterUsuarioAsync(request.Id);
+
+        if (usuarioEntity == null)
         {
-            var usuarioEntity = await _usuarioRepository.ObterUsuarioAsync(request.Id);
-
-            if (usuarioEntity == null)
-            {
-                return Result.Error<AtualizarUsuarioResponse>(new Compartilhado.
-                    Excecoes.SemResultadosException());
-            }
-
-            usuarioEntity.Atualizar(request.Nome);
-
-            await _usuarioRepository.AtualizarUsuarioAsync(usuarioEntity);
-
-            return Result.Success(new AtualizarUsuarioResponse(usuarioEntity.Nome));
+            return Result.Error<AtualizarUsuarioResponse>(new Compartilhado.
+                Excecoes.SemResultadosException());
         }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro ao atualizar os usuários");
-            throw;
-        }
+
+        usuarioEntity.Atualizar(request.Nome);
+
+        await _usuarioRepository.AtualizarUsuarioAsync(usuarioEntity);
+
+        return Result.Success(new AtualizarUsuarioResponse(usuarioEntity.Nome));
     }
+
 }
