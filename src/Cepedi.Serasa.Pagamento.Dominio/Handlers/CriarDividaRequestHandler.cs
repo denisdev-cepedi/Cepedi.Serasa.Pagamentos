@@ -4,6 +4,7 @@ using MediatR;
 using OperationResult;
 using Microsoft.Extensions.Logging;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
+using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
 
 namespace Cepedi.Serasa.Pagamento.Dominio;
 
@@ -11,10 +12,18 @@ public class CriarDividaRequestHandler
     : IRequestHandler<CriarDividaRequest, Result<CriarDividaResponse>>
 {
     private readonly ILogger _logger;
-    private readonly IDividaRepository? _dividaRepository;
+    private readonly IDividaRepository _dividaRepository;
+
+    private readonly ICredorRepository _credorRepository;
+
+    public CriarDividaRequestHandler(ILogger logger, IDividaRepository dividaRepository, ICredorRepository credorRepository){
+        _logger = logger;
+        _dividaRepository = dividaRepository;
+        _credorRepository = credorRepository;
+    }
     public async Task<Result<CriarDividaResponse>> Handle(CriarDividaRequest request, CancellationToken cancellationToken)
     {
-        var credorEntity = await _dividaRepository.ObterCredorAsync(request.IdCredor);
+        var credorEntity = await _credorRepository.ObterCredorAsync(request.IdCredor);
         var pessoaEntity = await _dividaRepository.ObterPessoaAsync(request.IdPessoa);
         var divida = new DividaEntity()
         {

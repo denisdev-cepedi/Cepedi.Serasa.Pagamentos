@@ -45,22 +45,6 @@ public class DividaRepository : IDividaRepository
         return await _context.Divida.Where(e => e.Id == id).FirstOrDefaultAsync();
     }
 
-    public Task<DividaEntity> ObterDividaPorCredorAsync(int idCredor)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<DividaEntity> ObterDividaPorPessoaAsync(int idPessoa)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<CredorEntity> ObterCredorAsync(int idCredor)
-    {
-        throw new NotImplementedException();
-    }
-
-
     public Task<PessoaEntity> ObterPessoaAsync(int idPessoa)
     {
         throw new NotImplementedException();
