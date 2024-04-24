@@ -1,13 +1,12 @@
 using RabbitMQ.Client;
-using System;
 using System.Text;
 
-var factory = new ConnectionFactory() { HostName = "srv508250.hstgr.cloud"};
+var factory = new ConnectionFactory() { HostName = "srv508250.hstgr.cloud", UserName = "aluno", Password = "changeme"};
 
 using (var connection = factory.CreateConnection())
 using (var channel = connection.CreateModel())
 {
-    channel.QueueDeclare(queue: "FilaRabbitMQ",
+    channel.QueueDeclare(queue: "SeOAviaoForCairEhSoPularAntesDeChegarNoChao",
                                 durable: false,
                                 exclusive: false,
                                 autoDelete: false,
@@ -15,7 +14,7 @@ using (var channel = connection.CreateModel())
     string message = "Hello World!";
     var body = Encoding.UTF8.GetBytes(message);
 
-    channel.BasicPublish(exchange: "",
+    channel.BasicPublish(exchange: "Obvio",
                          routingKey: "hello",
                          basicProperties: null,
                          body: body);
