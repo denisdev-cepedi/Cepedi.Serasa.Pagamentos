@@ -25,6 +25,8 @@ namespace Cepedi.Serasa.Pagamento.IoC
             ConfigurarFluentValidation(services);
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IPessoaRepository, PessoaRepository>();
+            services.AddScoped<ICredorRepository, CredorRepository>();
+            services.AddScoped<IPagamentoRepository, PagamentoRepository>();
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
         }

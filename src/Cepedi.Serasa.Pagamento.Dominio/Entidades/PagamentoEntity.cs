@@ -12,4 +12,9 @@ public class PagamentoEntity
     public int IdCredor { get; set; }
 
     public CredorEntity Credor { get; set; } = default!;
+
+    internal void AtualizarValor(double valor)
+    {
+        Valor = valor;
+    }
 }
