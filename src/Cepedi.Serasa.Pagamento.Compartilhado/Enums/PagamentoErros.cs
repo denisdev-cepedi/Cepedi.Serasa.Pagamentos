@@ -24,6 +24,13 @@ public class PagamentoErros
         Tipo = ETipoErro.Erro
     };
 
+    public static ResultadoErro ErroGravacaoCredor = new()
+    {
+        Titulo = "Ocorreu um erro na gravação",
+        Descricao = "Ocorreu um erro na gravação do usuário. Por favor tente novamente",
+        Tipo = ETipoErro.Erro
+    };
+
     public static ResultadoErro DadosInvalidos = new()
     {
         Titulo = "Dados inválidos",
