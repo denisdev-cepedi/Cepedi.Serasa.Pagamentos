@@ -30,3 +30,4 @@ public class CredorControllerTests
         await _mediator.ReceivedWithAnyArgs().Send(request);
     }
 }
+
