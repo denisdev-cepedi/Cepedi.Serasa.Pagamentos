@@ -38,6 +38,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cepedi.Serasa.Pagamento.Dom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cepedi.Serasa.Pagamento.Data.Tests", "tests\Cepedi.Serasa.Pagamento.Dados.Tests\Cepedi.Serasa.Pagamento.Data.Tests.csproj", "{3ABE8C61-DB9E-4C1E-9514-B5ADA8D99A4E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RaabitMQ", "RaabitMQ", "{0871D94C-6407-49BD-B173-EE70E7EFA59C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "RaabitMQ\WebApplication1\WebApplication1.csproj", "{22E53B7B-FD2F-4593-9DED-433B44D1931A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +84,10 @@ Global
 		{3ABE8C61-DB9E-4C1E-9514-B5ADA8D99A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3ABE8C61-DB9E-4C1E-9514-B5ADA8D99A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3ABE8C61-DB9E-4C1E-9514-B5ADA8D99A4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22E53B7B-FD2F-4593-9DED-433B44D1931A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E53B7B-FD2F-4593-9DED-433B44D1931A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E53B7B-FD2F-4593-9DED-433B44D1931A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E53B7B-FD2F-4593-9DED-433B44D1931A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +102,7 @@ Global
 		{3849BC04-C654-48E9-A2F8-2FCF473A7FC7} = {2D4A6734-55E9-46FD-BC86-1A6B9652198C}
 		{FA596882-D387-4F57-B5C0-4B6186AF8B57} = {2D4A6734-55E9-46FD-BC86-1A6B9652198C}
 		{3ABE8C61-DB9E-4C1E-9514-B5ADA8D99A4E} = {2D4A6734-55E9-46FD-BC86-1A6B9652198C}
+		{22E53B7B-FD2F-4593-9DED-433B44D1931A} = {0871D94C-6407-49BD-B173-EE70E7EFA59C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {18F2618F-D5A0-4779-AB65-8871DF992684}
