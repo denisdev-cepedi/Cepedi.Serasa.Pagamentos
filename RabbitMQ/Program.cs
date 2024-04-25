@@ -8,12 +8,6 @@ class Program
     public static void Main()
     {
 
-//         RabbitMQ": {
-//   "Hostname": "srv508250.hstgr.cloud",
-//   "QueueName": "Fila.Teste",
-//   "User": "aluno",
-//   "Password": "changeme"
-
         var factory = new ConnectionFactory() { HostName = "srv508250.hstgr.cloud", UserName = "aluno", Password = "changeme" };
         using (var connection = factory.CreateConnection())
         using (var channel = connection.CreateModel())
