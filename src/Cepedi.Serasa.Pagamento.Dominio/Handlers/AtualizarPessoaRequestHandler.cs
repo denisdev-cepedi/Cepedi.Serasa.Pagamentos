@@ -18,26 +18,20 @@ public class AtualizarPessoaRequestHandler : IRequestHandler<AtualizarPessoaRequ
     }
     public async Task<Result<AtualizarPessoaResponse>> Handle(AtualizarPessoaRequest request, CancellationToken cancellationToken)
     {
-        try
+
+        var pessoaEntity = await _pessoaRepository.ObterPessoaAsync(request.Id);
+
+        if (pessoaEntity == null)
         {
-            var pessoaEntity = await _pessoaRepository.ObterPessoaAsync(request.Id);
-
-            if (pessoaEntity == null)
-            {
-                return Result.Error<AtualizarPessoaResponse>(new Compartilhado.
-                    Excecoes.SemResultadosException());
-            }
-
-            pessoaEntity.Atualizar(request.Nome);
-
-            await _pessoaRepository.AtualizarPessoaAsync(pessoaEntity);
-
-            return Result.Success(new AtualizarPessoaResponse(pessoaEntity.Nome));
+            return Result.Error<AtualizarPessoaResponse>(new Compartilhado.
+                Excecoes.SemResultadosException());
         }
-        catch
-        {
-            _logger.LogError("Ocorreu um erro ao atualizar os usuários");
-            throw;
-        }
+
+        pessoaEntity.Atualizar(request.Nome);
+
+        await _pessoaRepository.AtualizarPessoaAsync(pessoaEntity);
+
+        return Result.Success(new AtualizarPessoaResponse(pessoaEntity.Nome));
+
     }
 }

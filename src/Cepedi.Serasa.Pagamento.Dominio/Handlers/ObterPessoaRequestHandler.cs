@@ -11,7 +11,8 @@ public class ObterPessoaRequestHandler : IRequestHandler<ObterPessoaRequest, Res
 {
     private readonly ILogger<ObterPessoaRequestHandler> _logger;
     private readonly IPessoaRepository _pessoaRepository;
-    public ObterPessoaRequestHandler(ILogger<ObterPessoaRequestHandler> logger, IPessoaRepository pessoaRepository){
+    public ObterPessoaRequestHandler(ILogger<ObterPessoaRequestHandler> logger, IPessoaRepository pessoaRepository)
+    {
         _logger = logger;
         _pessoaRepository = pessoaRepository;
     }
