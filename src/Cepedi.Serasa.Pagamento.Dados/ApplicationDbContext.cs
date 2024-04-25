@@ -10,6 +10,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<UsuarioEntity> Usuario { get; set; } = default!;
     public DbSet<PagamentoEntity> Pagamento { get; set; } = default!;
     public DbSet<CredorEntity> Credor { get; set; } = default!;
+    public DbSet<DividaEntity> Divida { get; set; } = default!;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -21,4 +22,5 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
+
 }

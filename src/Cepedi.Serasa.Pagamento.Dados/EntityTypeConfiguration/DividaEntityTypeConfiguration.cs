@@ -18,5 +18,11 @@ public class DividaEntityTypeConfiguration : IEntityTypeConfiguration<DividaEnti
         builder.HasOne<CredorEntity>(c => c.Credor)
             .WithMany()
             .HasForeignKey(c => c.IdCredor);
+
+        builder.Property(c => c.IdPessoa).IsRequired();
+
+        builder.HasOne<PessoaEntity>(c => c.Pessoa).
+            WithMany().
+            HasForeignKey(c => c.IdPessoa);    
     }
 }

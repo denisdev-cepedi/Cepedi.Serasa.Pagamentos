@@ -26,6 +26,8 @@ namespace Cepedi.Serasa.Pagamento.IoC
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ICredorRepository, CredorRepository>();
             services.AddScoped<IPagamentoRepository, PagamentoRepository>();
+            services.AddScoped<IDividaRepository, DividaRepository>();
+
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
         }
