@@ -6,5 +6,10 @@ public class PessoaEntity
     public string Nome { get; set; } = default!;
     public string? Cpf { get; set; } = null;
 
+    internal void Atualizar(string nome)
+    {
+        Nome = nome;
+    }
+
 
 }

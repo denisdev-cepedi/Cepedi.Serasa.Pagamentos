@@ -8,6 +8,7 @@ namespace Cepedi.Serasa.Pagamento.Dados;
 public class ApplicationDbContext : DbContext
 {
     public DbSet<UsuarioEntity> Usuario { get; set; } = default!;
+    public DbSet<PessoaEntity> Pessoa { get; set; } = default!;
     public DbSet<PagamentoEntity> Pagamento { get; set; } = default!;
     public DbSet<CredorEntity> Credor { get; set; } = default!;
     public DbSet<DividaEntity> Divida { get; set; } = default!;

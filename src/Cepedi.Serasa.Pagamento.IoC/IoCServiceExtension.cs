@@ -24,6 +24,7 @@ namespace Cepedi.Serasa.Pagamento.IoC
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidacaoComportamento<,>));
             ConfigurarFluentValidation(services);
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IPessoaRepository, PessoaRepository>();
             services.AddScoped<ICredorRepository, CredorRepository>();
             services.AddScoped<IPagamentoRepository, PagamentoRepository>();
             services.AddScoped<IDividaRepository, DividaRepository>();
