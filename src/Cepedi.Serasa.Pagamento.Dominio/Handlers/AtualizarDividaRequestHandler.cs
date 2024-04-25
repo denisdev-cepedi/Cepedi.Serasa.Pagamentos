@@ -1,10 +1,11 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using OperationResult;
 
 namespace Cepedi.Serasa.Pagamento.Dominio;
 
-public class AtualizarDividaRequestHandler
+public class AtualizarDividaRequestHandler : IRequestHandler<AtualizarDividaRequest, Result<AtualizarDividaResponse>>
 {
     private readonly IDividaRepository _dividaRepository;
     private readonly ILogger<AtualizarDividaRequestHandler> _logger;
@@ -15,7 +16,7 @@ public class AtualizarDividaRequestHandler
         _logger = logger;
     }
 
-     public async Task<Result<AtualizarDividaResponse>> Handle(AtualizarDividaRequest request, CancellationToken cancellationToken)
+    public async Task<Result<AtualizarDividaResponse>> Handle(AtualizarDividaRequest request, CancellationToken cancellationToken)
     {
         var dividaEntity = await _dividaRepository.ObterDividaAsync(request.Id);
 
