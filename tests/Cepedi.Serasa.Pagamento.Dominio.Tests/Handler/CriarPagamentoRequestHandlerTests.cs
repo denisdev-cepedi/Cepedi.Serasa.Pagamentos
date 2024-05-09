@@ -16,11 +16,12 @@ public class CriarPagamentoRequestHandlerTests
     private readonly IPagamentoRepository _pagamentoRepository =
     Substitute.For<IPagamentoRepository>();
     private readonly ILogger<CriarPagamentoRequestHandler> _logger = Substitute.For<ILogger<CriarPagamentoRequestHandler>>();
+    private readonly ICredorRepository _credorRepository = Substitute.For<ICredorRepository>();
     private readonly CriarPagamentoRequestHandler _sut;
 
     public CriarPagamentoRequestHandlerTests()
     {
-        _sut = new CriarPagamentoRequestHandler(_pagamentoRepository, _logger);
+        _sut = new CriarPagamentoRequestHandler(_pagamentoRepository, _credorRepository, _logger);
     }
 
     [Fact]

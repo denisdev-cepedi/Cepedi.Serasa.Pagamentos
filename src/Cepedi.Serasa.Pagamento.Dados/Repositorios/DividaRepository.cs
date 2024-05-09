@@ -49,4 +49,8 @@ public class DividaRepository : IDividaRepository
     {
         throw new NotImplementedException();
     }
+
+    public async Task<List<DividaEntity>> GetDividasAsync(){
+        return await _context.Divida.ToListAsync();
+    }
 }
