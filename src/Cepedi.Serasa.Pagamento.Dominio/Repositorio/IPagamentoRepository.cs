@@ -9,4 +9,5 @@ public interface IPagamentoRepository
     Task<PagamentoEntity> AtualizarPagamentoAsync(PagamentoEntity pagamento);
     Task<CredorEntity> ObterCredorPagamentoAsync(int id);
     Task<PagamentoEntity> DeletarPagamentoAsync(int id);
+    Task<DividaEntity> QuitarPagamentoAsync(int idDivida, double valor);
 }

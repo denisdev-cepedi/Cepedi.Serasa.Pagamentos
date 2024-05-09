@@ -15,16 +15,21 @@ public class CriarPagamentoRequestHandler
     private readonly ICredorRepository _credorRepository;
     private readonly IPagamentoRepository _pagamentoRepository;
 
-    public CriarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ICredorRepository credorRepository, ILogger<CriarPagamentoRequestHandler> logger)
+    private readonly IDividaRepository _dividaRepository;
+
+    public CriarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ICredorRepository credorRepository, IDividaRepository dividaRepository, ILogger<CriarPagamentoRequestHandler> logger)
     {
         _credorRepository = credorRepository;
         _pagamentoRepository = pagamentoRepository;
+        _dividaRepository = dividaRepository;
         _logger = logger;
     }
 
     public async Task<Result<CriarPagamentoResponse>> Handle(CriarPagamentoRequest request, CancellationToken cancellationToken)
     {
         var credorEntity = await _credorRepository.ObterCredorAsync(request.IdCredor);
+
+        var dividaEntity = await _dividaRepository.ObterDividaAsync(request.IdDivida);
 
         var pagamento = new PagamentoEntity()
         {
@@ -39,7 +44,13 @@ public class CriarPagamentoRequestHandler
             Credor = credorEntity
         };
 
+        if (null == await _pagamentoRepository.QuitarPagamentoAsync(dividaEntity.Id, pagamento.Valor))
+        {
+            throw new Exception("Erro ao quitar o pagamento. Por favor, tente novamente.");
+        }
+
         await _pagamentoRepository.CriarPagamentoAsync(pagamento);
+
 
         return Result.Success(new CriarPagamentoResponse(pagamento.Id, pagamento.Valor));
     }
