@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Cepedi.Serasa.Pagamento.Compartilhado;
 using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dados.Repositories;
 using Cepedi.Serasa.Pagamento.Dominio;
@@ -36,7 +37,7 @@ namespace Cepedi.Serasa.Pagamento.IoC
         private static void ConfigurarFluentValidation(IServiceCollection services)
         {
             var abstractValidator = typeof(AbstractValidator<>);
-            var validadores = typeof(QualquerCoisa)
+            var validadores = typeof(IValida)
                 .Assembly
                 .DefinedTypes
                 .Where(type => type.BaseType?.IsGenericType is true &&
@@ -49,7 +50,9 @@ namespace Cepedi.Serasa.Pagamento.IoC
             {
                 services.AddSingleton(validator!.GetType().BaseType!, validator);
             }
+
         }
+
 
         private static void ConfigureDbContext(IServiceCollection services, IConfiguration configuration)
         {
