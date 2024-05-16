@@ -40,6 +40,10 @@ public class DividaRepository : IDividaRepository
         await _context.SaveChangesAsync();
         return divida;
     }
+    public async Task<List<DividaEntity>> ObterDividasAsync()
+    {
+        return await _context.Divida.ToListAsync();
+    }
     public async Task<DividaEntity> ObterDividaAsync(int id)
     {
         return await _context.Divida.Where(e => e.Id == id).FirstOrDefaultAsync();
