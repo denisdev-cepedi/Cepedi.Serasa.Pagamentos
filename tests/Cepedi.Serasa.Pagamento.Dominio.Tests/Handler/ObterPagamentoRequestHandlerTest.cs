@@ -11,26 +11,6 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
 public class ObterPagamentoRequestHandlerTest
 {
-    private readonly IPagamentoRepository _pagamentoRepository = Substitute.For<IPagamentoRepository>();
-    private readonly ILogger<ObterPagamentoRequestHandler> _logger = Substitute.For<ILogger<ObterPagamentoRequestHandler>>();
-    private readonly ObterPagamentoRequestHandler _sut;
-    public ObterPagamentoRequestHandlerTest()
-    {
-        _sut = new ObterPagamentoRequestHandler(_pagamentoRepository, _logger);
-    }
-
-    public class ObterPagamentoResquestHandlerTestsFixture
-    {
-        public Mock<IPagamentoRepository> MockPagamentoRepository { get; }
-        public Mock<ILogger<ObterPagamentoRequestHandler>> MockLogger { get; }
-
-        public ObterPagamentoResquestHandlerTestsFixture()
-        {
-            MockPagamentoRepository = new Mock<IPagamentoRepository>();
-            MockLogger = new Mock<ILogger<ObterPagamentoRequestHandler>>();
-        }
-    }
-
     [Fact]
     public async Task Handle_ShouldReturnSuccess_WhenPagamentoFound()
     {
@@ -72,3 +52,15 @@ public class ObterPagamentoRequestHandlerTest
         Assert.IsType<SemResultadosException>(result.Exception);
     }
 }
+
+public class ObterPagamentoResquestHandlerTestsFixture
+    {
+        public Mock<IPagamentoRepository> MockPagamentoRepository { get; }
+        public Mock<ILogger<ObterPagamentoRequestHandler>> MockLogger { get; }
+
+        public ObterPagamentoResquestHandlerTestsFixture()
+        {
+            MockPagamentoRepository = new Mock<IPagamentoRepository>();
+            MockLogger = new Mock<ILogger<ObterPagamentoRequestHandler>>();
+        }
+    }

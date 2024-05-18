@@ -11,26 +11,6 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
 public class ObterCredorRequestHandlerTest
 {
-    private readonly ICredorRepository _credorRepository = Substitute.For<ICredorRepository>();
-    private readonly ILogger<ObterCredorRequestHandler> _logger = Substitute.For<ILogger<ObterCredorRequestHandler>>();
-    private readonly ObterCredorRequestHandler _sut;
-    public ObterCredorRequestHandlerTest()
-    {
-        _sut = new ObterCredorRequestHandler(_credorRepository, _logger);
-    }
-
-    public class ObterCredorResquestHandlerTestsFixture
-    {
-        public Mock<ICredorRepository> MockCredorRepository { get; }
-        public Mock<ILogger<ObterCredorRequestHandler>> MockLogger { get; }
-
-        public ObterCredorResquestHandlerTestsFixture()
-        {
-            MockCredorRepository = new Mock<ICredorRepository>();
-            MockLogger = new Mock<ILogger<ObterCredorRequestHandler>>();
-        }
-    }
-
     [Fact]
     public async Task Handle_ShouldReturnSuccess_WhenDividaFound()
     {
@@ -72,3 +52,15 @@ public class ObterCredorRequestHandlerTest
         Assert.IsType<SemResultadosException>(result.Exception);
     }
 }
+
+ public class ObterCredorResquestHandlerTestsFixture
+    {
+        public Mock<ICredorRepository> MockCredorRepository { get; }
+        public Mock<ILogger<ObterCredorRequestHandler>> MockLogger { get; }
+
+        public ObterCredorResquestHandlerTestsFixture()
+        {
+            MockCredorRepository = new Mock<ICredorRepository>();
+            MockLogger = new Mock<ILogger<ObterCredorRequestHandler>>();
+        }
+    }

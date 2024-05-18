@@ -11,26 +11,6 @@ namespace Cepedi.Serasa.Pessoa.Dominio.Tests;
 
 public class ObterPessoaRequestHandlerTest
 {
-    private readonly IPessoaRepository _pessoaRepository = Substitute.For<IPessoaRepository>();
-    private readonly ILogger<ObterPessoaRequestHandler> _logger = Substitute.For<ILogger<ObterPessoaRequestHandler>>();
-    private readonly ObterPessoaRequestHandler _sut;
-    public ObterPessoaRequestHandlerTest()
-    {
-        _sut = new ObterPessoaRequestHandler(_logger, _pessoaRepository);
-    }
-
-    public class ObterPessoaResquestHandlerTestsFixture
-    {
-        public Mock<IPessoaRepository> MockPessoaRepository { get; }
-        public Mock<ILogger<ObterPessoaRequestHandler>> MockLogger { get; }
-
-        public ObterPessoaResquestHandlerTestsFixture()
-        {
-            MockPessoaRepository = new Mock<IPessoaRepository>();
-            MockLogger = new Mock<ILogger<ObterPessoaRequestHandler>>();
-        }
-    }
-
     [Fact]
     public async Task Handle_ShouldReturnSuccess_WhenPessoaFound()
     {
@@ -70,5 +50,17 @@ public class ObterPessoaRequestHandlerTest
         // Assert
         Assert.False(result.IsSuccess);
         Assert.IsType<SemResultadosException>(result.Exception);
+    }
+}
+
+public class ObterPessoaResquestHandlerTestsFixture
+{
+    public Mock<IPessoaRepository> MockPessoaRepository { get; }
+    public Mock<ILogger<ObterPessoaRequestHandler>> MockLogger { get; }
+
+    public ObterPessoaResquestHandlerTestsFixture()
+    {
+        MockPessoaRepository = new Mock<IPessoaRepository>();
+        MockLogger = new Mock<ILogger<ObterPessoaRequestHandler>>();
     }
 }

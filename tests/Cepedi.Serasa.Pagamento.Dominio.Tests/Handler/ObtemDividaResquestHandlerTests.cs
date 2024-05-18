@@ -11,27 +11,6 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
 public class ObtemDividaResquestHandlerTests
 {
-    private readonly IDividaRepository _dividaRepository = Substitute.For<IDividaRepository>();
-    private readonly ILogger<ObtemDividaResquestHandler> _logger = Substitute.For<ILogger<ObtemDividaResquestHandler>>();
-    private readonly ObtemDividaResquestHandler _sut;
-
-    public ObtemDividaResquestHandlerTests()
-    {
-        _sut = new ObtemDividaResquestHandler(_dividaRepository, _logger);
-    }
-
-    public class ObtemDividaResquestHandlerTestsFixture
-    {
-        public Mock<IDividaRepository> MockDividaRepository { get; }
-        public Mock<ILogger<ObtemDividaResquestHandler>> MockLogger { get; }
-
-        public ObtemDividaResquestHandlerTestsFixture()
-        {
-            MockDividaRepository = new Mock<IDividaRepository>();
-            MockLogger = new Mock<ILogger<ObtemDividaResquestHandler>>();
-        }
-    }
-
     [Fact]
     public async Task Handle_ShouldReturnSuccess_WhenDividaFound()
     {
@@ -74,6 +53,16 @@ public class ObtemDividaResquestHandlerTests
         Assert.IsType<SemResultadosException>(result.Exception);
     }
 
+}
 
+public class ObtemDividaResquestHandlerTestsFixture
+{
+    public Mock<IDividaRepository> MockDividaRepository { get; }
+    public Mock<ILogger<ObtemDividaResquestHandler>> MockLogger { get; }
 
+    public ObtemDividaResquestHandlerTestsFixture()
+    {
+        MockDividaRepository = new Mock<IDividaRepository>();
+        MockLogger = new Mock<ILogger<ObtemDividaResquestHandler>>();
+    }
 }
