@@ -40,6 +40,13 @@ public class DividaController : BaseController
     public async Task<ActionResult<ObtemDividaResponse>> ObterDividaAsync(
         [FromRoute] ObtemDividaRequest request) => await SendCommand(request);
 
+    [HttpGet("Pessoa/{Id}")]
+    [ProducesResponseType(typeof(ObtemDividasResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ObtemDividasResponse>> ObterDividasPessoaAsync(
+        [FromRoute] ObtemDividasRequest request) => await SendCommand(request);
+        
+
     [HttpDelete("{Id}")]
     [ProducesResponseType(typeof(DeletarDividaResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
