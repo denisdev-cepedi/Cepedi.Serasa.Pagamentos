@@ -30,7 +30,7 @@ public class ExcluirCredorRequestHandler :
 
         await _credorRepository.ExcluirCredorAsync(CredorEntity.Id);
 
-        return Result.Success(new ExcluirCredorResponse(CredorEntity.Nome));
+        return Result.Success(new ExcluirCredorResponse(CredorEntity.Id));
 
     }
 }

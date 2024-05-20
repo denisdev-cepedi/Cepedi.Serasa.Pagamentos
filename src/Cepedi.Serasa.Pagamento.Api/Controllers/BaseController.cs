@@ -1,5 +1,6 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
+using Cepedi.Serasa.Pagamento.Compartilhado.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OperationResult;
@@ -28,17 +29,24 @@ public class BaseController : ControllerBase
             var (_, res, error) => HandleError(error!)
         };
 
-    protected ActionResult HandleError(Exception error) => error switch
+    protected ActionResult HandleError(Exception error)
     {
-        SemResultadosException e => NoContent(),
-        _ => BadRequest(FormatErrorMessage(PagamentoErros.Generico))
-    };
+        if (error is ExcecaoAplicacao excecao)
+        {
+            return BadRequest(FormatErrorMessage(excecao.ResponseErro));
+        }
+        else
+        {
+            // Se a exceção não for do tipo ExcecaoAplicacao, retorna um erro genérico
+            return BadRequest(FormatErrorMessage(CadastroErros.Generico));
+        }
+    }
 
     private ResultadoErro FormatErrorMessage(ResultadoErro responseErro, IEnumerable<string>? errors = null)
     {
-        if (errors == null)
+        if (errors != null)
         {
-            responseErro.Descricao = $"{responseErro.Descricao} : {string.Join("; ", errors!)}";
+            responseErro.Descricao = $"{responseErro.Descricao}: {string.Join("; ", errors!)}";
         }
 
         return responseErro;

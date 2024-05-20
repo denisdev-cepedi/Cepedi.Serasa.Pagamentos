@@ -3,7 +3,7 @@
 namespace Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
 public class SemResultadosException : ExcecaoAplicacao
 {
-    public SemResultadosException() : 
+    public SemResultadosException() :
         base(PagamentoErros.SemResultados)
     {
     }
