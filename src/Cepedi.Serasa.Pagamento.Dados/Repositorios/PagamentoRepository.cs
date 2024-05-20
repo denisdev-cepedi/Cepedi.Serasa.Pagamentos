@@ -65,21 +65,8 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
             return pagamentoEntity;
         }
 
-        public async Task<DividaEntity> QuitarPagamentoAsync(int idDivida, double valor)
+        public async Task<DividaEntity> QuitarPagamentoAsync(DividaEntity divida)
         {
-            var divida = await _context.Divida.Where(e => e.Id == idDivida).FirstOrDefaultAsync();
-
-            if (divida == null)
-            {
-                return null;
-            }
-            else if (divida.Valor != valor)
-            {
-                return null;
-            }
-
-            divida.DividaAberta = false;
-
             _context.Divida.Update(divida);
 
             await _context.SaveChangesAsync();
@@ -87,4 +74,5 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
             return divida;
         }
     }
+
 }

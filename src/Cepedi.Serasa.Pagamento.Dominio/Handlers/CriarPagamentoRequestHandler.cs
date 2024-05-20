@@ -1,6 +1,5 @@
 ﻿using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
-using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using MediatR;
@@ -14,7 +13,6 @@ public class CriarPagamentoRequestHandler
     private readonly ILogger<CriarPagamentoRequestHandler> _logger;
     private readonly ICredorRepository _credorRepository;
     private readonly IPagamentoRepository _pagamentoRepository;
-
     private readonly IDividaRepository _dividaRepository;
 
     public CriarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ICredorRepository credorRepository, IDividaRepository dividaRepository, ILogger<CriarPagamentoRequestHandler> logger)
@@ -44,9 +42,24 @@ public class CriarPagamentoRequestHandler
             Credor = credorEntity
         };
 
-        if (null == await _pagamentoRepository.QuitarPagamentoAsync(dividaEntity.Id, pagamento.Valor))
+        if (dividaEntity == null)
         {
-            throw new Exception("Erro ao quitar o pagamento. Por favor, tente novamente.");
+            return Result.Error<CriarPagamentoResponse>(
+            new Compartilhado.Excecoes.SemResultadosException());
+        }
+
+        else if (dividaEntity.Valor != pagamento.Valor)
+        {
+            return Result.Error<CriarPagamentoResponse>(
+            new Compartilhado.Excecoes.SemResultadosException());
+        }
+
+        dividaEntity.DividaAberta = false;
+
+        if (null == await _pagamentoRepository.QuitarPagamentoAsync(dividaEntity))
+        {
+            return Result.Error<CriarPagamentoResponse>(
+            new Compartilhado.Excecoes.SemResultadosException());
         }
 
         await _pagamentoRepository.CriarPagamentoAsync(pagamento);

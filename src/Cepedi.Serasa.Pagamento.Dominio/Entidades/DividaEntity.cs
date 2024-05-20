@@ -8,7 +8,7 @@ public class DividaEntity
     public DateTime DataDeVencimento { get; set; }
 
     public int IdCredor { get; set; }
-
+    public bool DividaAberta { get; set; } = true;
     public int IdPessoa { get; set; }
 
     public CredorEntity Credor { get; set; } = default!;
@@ -20,5 +20,4 @@ public class DividaEntity
         DataDeVencimento = dataDeVencimento;
     }
 
-    public bool DividaAberta { get; set; } = true;
 }
