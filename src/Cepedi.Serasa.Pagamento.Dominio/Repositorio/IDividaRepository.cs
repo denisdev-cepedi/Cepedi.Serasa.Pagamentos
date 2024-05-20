@@ -9,5 +9,6 @@ public interface IDividaRepository
     Task<DividaEntity> AtualizarDividaAsync(DividaEntity divida);
     Task<DividaEntity> DeletarDividaAsync(int id);
     Task<PessoaEntity> ObterPessoaAsync(int idPessoa);
+    Task<List<DividaEntity>> ObterDividasPessoaAsync(int idPessoa);
 
 }
