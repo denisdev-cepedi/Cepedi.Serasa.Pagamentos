@@ -42,7 +42,7 @@ public class CriarPagamentoRequestHandler
             Credor = credorEntity
         };
 
-        if (dividaEntity == null && dividaEntity.Valor != pagamento.Valor)
+        if (dividaEntity == null || dividaEntity.Valor != pagamento.Valor)
         {
             return Result.Error<CriarPagamentoResponse>(
             new Compartilhado.Excecoes.SemResultadosException());
