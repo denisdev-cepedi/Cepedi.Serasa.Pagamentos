@@ -26,6 +26,12 @@ public class CriarPagamentoRequestHandler
     {
         var credorEntity = await _credorRepository.ObterCredorAsync(request.IdCredor);
 
+        if (credorEntity == null)
+        {
+            return Result.Error<CriarPagamentoResponse>(
+               new Compartilhado.Excecoes.ExcecaoAplicacao(CredorErrors.CredorInexistente));
+        }
+
         var pagamento = new PagamentoEntity()
         {
             Valor = request.Valor,
