@@ -37,19 +37,19 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
             return await _context.Pagamento.ToListAsync();
         }
 
-        public async Task<PagamentoEntity> ObterPagamentoAsync(int id)
+        public async Task<PagamentoEntity?> ObterPagamentoAsync(int id)
         {
             return await
                 _context.Pagamento.Where(e => e.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<CredorEntity> ObterCredorPagamentoAsync(int id)
+        public async Task<CredorEntity?> ObterCredorPagamentoAsync(int id)
         {
             return await
                 _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<PagamentoEntity> DeletarPagamentoAsync(int id)
+        public async Task<PagamentoEntity?> DeletarPagamentoAsync(int id)
         {
             var pagamentoEntity = await ObterPagamentoAsync(id);
 

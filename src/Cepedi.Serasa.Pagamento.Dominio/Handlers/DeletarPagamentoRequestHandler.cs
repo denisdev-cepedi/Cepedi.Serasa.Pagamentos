@@ -4,6 +4,7 @@ using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using OperationResult;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 
 namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class DeletarPagamentoRequestHandler :
@@ -24,8 +25,8 @@ public class DeletarPagamentoRequestHandler :
 
         if (pagamentoEntity == null)
         {
-            return Result.Error<DeletarPagamentoResponse>(new Compartilhado.
-                Excecoes.SemResultadosException());
+            return Result.Error<DeletarPagamentoResponse>(
+              new Compartilhado.Excecoes.ExcecaoAplicacao(PagamentoErros.PagamentoNaoEncontrado));
         }
 
         await _pagamentoRepository.DeletarPagamentoAsync(pagamentoEntity.Id);
