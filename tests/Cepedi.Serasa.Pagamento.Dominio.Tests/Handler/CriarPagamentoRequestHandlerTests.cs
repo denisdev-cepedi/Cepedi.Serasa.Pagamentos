@@ -8,38 +8,87 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NSubstitute;
 using OperationResult;
+using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 
 namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
 public class CriarPagamentoRequestHandlerTests
 {
-    private readonly IPagamentoRepository _pagamentoRepository =
-    Substitute.For<IPagamentoRepository>();
-    private readonly ICredorRepository _credorRepository = Substitute.For<ICredorRepository>();
-    private readonly ILogger<CriarPagamentoRequestHandler> _logger = Substitute.For<ILogger<CriarPagamentoRequestHandler>>();
-    private readonly CriarPagamentoRequestHandler _sut;
+    private readonly Mock<ICredorRepository> _credorRepositoryMock;
+    private readonly Mock<IPagamentoRepository> _pagamentoRepositoryMock;
+    private readonly Mock<ILogger<CriarPagamentoRequestHandler>> _loggerMock;
+    private readonly CriarPagamentoRequestHandler _handler;
 
     public CriarPagamentoRequestHandlerTests()
     {
-        _sut = new CriarPagamentoRequestHandler(_pagamentoRepository, _credorRepository, _logger);
+        _credorRepositoryMock = new Mock<ICredorRepository>();
+        _pagamentoRepositoryMock = new Mock<IPagamentoRepository>();
+        _loggerMock = new Mock<ILogger<CriarPagamentoRequestHandler>>();
+        _handler = new CriarPagamentoRequestHandler(_pagamentoRepositoryMock.Object, _credorRepositoryMock.Object, _loggerMock.Object);
     }
 
     [Fact]
-    public async Task CriarPagamentoAsync_QuandoCriar_DeveRetornarSucesso()
+    public async Task Handle_CredorExistente_DeveCriarPagamentoERetornarSucesso()
     {
-        //Arrange 
-        var pagamento = new CriarPagamentoRequest { Valor = 400 };
-        _pagamentoRepository.CriarPagamentoAsync(It.IsAny<PagamentoEntity>())
-            .ReturnsForAnyArgs(new PagamentoEntity());
+        // Arrange
+        var credorId = 1;
+        var pagamentoId = 100;
+        var credor = new CredorEntity { Id = credorId };
+        var request = new CriarPagamentoRequest
+        {
+            IdCredor = credorId,
+            Valor = 500.0,
+            DataDePagamento = DateTime.Now,
+            DataDeVencimento = DateTime.Now.AddDays(30)
+        };
 
-        //Act
-        var result = await _sut.Handle(pagamento, CancellationToken.None);
+        _credorRepositoryMock.Setup(repo => repo.ObterCredorAsync(credorId))
+            .ReturnsAsync(credor);
+        _pagamentoRepositoryMock.Setup(repo => repo.CriarPagamentoAsync(It.IsAny<PagamentoEntity>()))
+            .ReturnsAsync((PagamentoEntity pagamento) =>
+            {
+                pagamento.Id = pagamentoId;
+                return pagamento;
+            });
 
-        //Assert 
-        result.Should().BeOfType<Result<CriarPagamentoResponse>>().Which
-            .Value.valor.Should().Be(pagamento.Valor);
-        result.Should().BeOfType<Result<CriarPagamentoResponse>>().Which
-            .Value.valor.Should().Be(400);
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(pagamentoId, result.Value.idPagamento);
+        Assert.Equal(request.Valor, result.Value.valor);
+        _credorRepositoryMock.Verify(repo => repo.ObterCredorAsync(credorId), Times.Once);
+        _pagamentoRepositoryMock.Verify(repo => repo.CriarPagamentoAsync(It.IsAny<PagamentoEntity>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_CredorNaoExistente_DeveRetornarErro()
+    {
+        // Arrange
+        var credorId = 1;
+        var request = new CriarPagamentoRequest
+        {
+            IdCredor = credorId,
+            Valor = 500.0,
+            DataDePagamento = DateTime.Now,
+            DataDeVencimento = DateTime.Now.AddDays(30)
+        };
+
+        _credorRepositoryMock.Setup(repo => repo.ObterCredorAsync(credorId))
+            .ReturnsAsync((CredorEntity)null);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.IsType<ExcecaoAplicacao>(result.Exception);
+        var excecaoAplicacao = Assert.IsType<ExcecaoAplicacao>(result.Exception);
+        Assert.Equal(CredorErrors.CredorInexistente, excecaoAplicacao.ResponseErro);
+        _credorRepositoryMock.Verify(repo => repo.ObterCredorAsync(credorId), Times.Once);
+        _pagamentoRepositoryMock.Verify(repo => repo.CriarPagamentoAsync(It.IsAny<PagamentoEntity>()), Times.Never);
     }
 
 }
