@@ -1,12 +1,17 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dados.Repositories;
+using Cepedi.Serasa.Pagamento.Dados.Repositorios.Queries;
 using Cepedi.Serasa.Pagamento.Dominio;
 using Cepedi.Serasa.Pagamento.Dominio.Pipelines;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
+using Cepedi.Serasa.Pagamento.Dominio.Repositorio.Queries;
+using Cepedi.Serasa.Pagamento.Dominio.Servicos;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,6 +33,22 @@ namespace Cepedi.Serasa.Pagamento.IoC
             services.AddScoped<ICredorRepository, CredorRepository>();
             services.AddScoped<IPagamentoRepository, PagamentoRepository>();
             services.AddScoped<IDividaRepository, DividaRepository>();
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IPessoaQueryRepository, PessoaQueryRepository>();
+
+            // Cache Redis
+            services.AddStackExchangeRedisCache(obj =>
+            {
+                obj.Configuration = configuration["Redis::Connection"];
+                obj.InstanceName = configuration["Redis::Instance"];
+            });
+
+            services.AddSingleton<IDistributedCache, RedisCache>();
+            services.AddScoped(typeof(ICache<>), typeof(Cache<>));
+
+
 
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
