@@ -5,6 +5,7 @@ using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using OperationResult;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 
 namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class CriarPagamentoRequestHandler
@@ -42,10 +43,16 @@ public class CriarPagamentoRequestHandler
             Credor = credorEntity
         };
 
-        if (dividaEntity == null || dividaEntity.Valor != pagamento.Valor)
+        if (dividaEntity == null)
         {
             return Result.Error<CriarPagamentoResponse>(
-            new Compartilhado.Excecoes.SemResultadosException());
+            new Compartilhado.Excecoes.ExcecaoAplicacao(PagamentoErros.DividaNaoEncontrada));
+        }
+
+        if (dividaEntity.Valor != pagamento.Valor)
+        {
+            return Result.Error<CriarPagamentoResponse>(
+            new Compartilhado.Excecoes.ExcecaoAplicacao(PagamentoErros.ValorPagamentoDiferente));
         }
 
         dividaEntity.DividaAberta = false;

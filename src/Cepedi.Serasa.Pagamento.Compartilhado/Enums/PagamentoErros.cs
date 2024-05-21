@@ -17,6 +17,20 @@ public class PagamentoErros
         Tipo = ETipoErro.Alerta
     };
 
+    public static readonly ResultadoErro ValorPagamentoDiferente = new()
+    {
+        Titulo = "Valor do pagamento diferente do valor da dívida",
+        Descricao = "O valor do pagamento deve ser igual ao valor da dívida",
+        Tipo = ETipoErro.Alerta
+    };
+
+    public static readonly ResultadoErro DividaNaoEncontrada = new()
+    {
+        Titulo = "Divida não encontrada",
+        Descricao = "Verifique os dados informados e tente novamente",
+        Tipo = ETipoErro.Alerta
+    };
+
     public static readonly ResultadoErro PagamentoNaoEncontrado = new()
     {
         Titulo = "Pagamento não encontrado",
