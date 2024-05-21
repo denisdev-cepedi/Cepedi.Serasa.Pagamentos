@@ -17,7 +17,7 @@ public class PagamentoErros
         Tipo = ETipoErro.Alerta
     };
 
-    public static readonly ResultadoErro ValorPagamentoDiferente = new()
+    public static readonly ResultadoErro ValorPagamentoIncompativelComDivida = new()
     {
         Titulo = "Valor do pagamento diferente do valor da dívida",
         Descricao = "O valor do pagamento deve ser igual ao valor da dívida",

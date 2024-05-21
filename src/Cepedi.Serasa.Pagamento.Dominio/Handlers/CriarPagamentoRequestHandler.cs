@@ -52,7 +52,7 @@ public class CriarPagamentoRequestHandler
         if (dividaEntity.Valor != pagamento.Valor)
         {
             return Result.Error<CriarPagamentoResponse>(
-            new Compartilhado.Excecoes.ExcecaoAplicacao(PagamentoErros.ValorPagamentoDiferente));
+            new Compartilhado.Excecoes.ExcecaoAplicacao(PagamentoErros.ValorPagamentoIncompativelComDivida));
         }
 
         dividaEntity.DividaAberta = false;
