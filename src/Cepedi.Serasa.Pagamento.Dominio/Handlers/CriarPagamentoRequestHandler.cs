@@ -46,7 +46,7 @@ public class CriarPagamentoRequestHandler
         if (dividaEntity == null)
         {
             return Result.Error<CriarPagamentoResponse>(
-            new Compartilhado.Excecoes.ExcecaoAplicacao(PagamentoErros.DividaNaoEncontrada));
+            new Compartilhado.Excecoes.ExcecaoAplicacao(DividaErros.DividaNaoEncontrada));
         }
 
         if (dividaEntity.Valor != pagamento.Valor)
