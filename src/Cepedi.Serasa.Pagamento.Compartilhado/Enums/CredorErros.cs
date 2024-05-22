@@ -2,7 +2,7 @@
 using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
 
 namespace Cepedi.Serasa.Pagamento.Compartilhado.Enums;
-public class CredorErrors
+public class CredorErros
 {
     public static readonly ResultadoErro Generico = new()
     {
