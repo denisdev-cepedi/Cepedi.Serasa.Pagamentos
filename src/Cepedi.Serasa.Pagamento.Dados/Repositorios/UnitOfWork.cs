@@ -5,6 +5,7 @@ using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
 namespace Cepedi.Serasa.Pagamento.Dados;
 public class UnitOfWork : IUnitOfWork
 {
+    private bool disposed = false;
     private readonly ApplicationDbContext _context;
     private Dictionary<Type, object> _repositories;
 
@@ -37,6 +38,21 @@ public class UnitOfWork : IUnitOfWork
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposed)
+            return;
+
+        if (disposing)
+        {
+            _context.Dispose();
+        }
+
+        disposed = true;
+    }
+
 }
