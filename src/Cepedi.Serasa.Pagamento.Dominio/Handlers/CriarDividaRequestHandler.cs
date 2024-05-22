@@ -11,6 +11,7 @@ namespace Cepedi.Serasa.Pagamento.Dominio;
 public class CriarDividaRequestHandler
     : IRequestHandler<CriarDividaRequest, Result<CriarDividaResponse>>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CriarDividaRequestHandler> _logger;
     private readonly IDividaRepository _dividaRepository;
 
@@ -18,12 +19,13 @@ public class CriarDividaRequestHandler
 
     private readonly ICredorRepository _credorRepository;
 
-    public CriarDividaRequestHandler(ILogger<CriarDividaRequestHandler> logger, IDividaRepository dividaRepository, ICredorRepository credorRepository, IPessoaRepository pessoaRepository)
+    public CriarDividaRequestHandler(ILogger<CriarDividaRequestHandler> logger, IDividaRepository dividaRepository, ICredorRepository credorRepository, IPessoaRepository pessoaRepository, IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _dividaRepository = dividaRepository;
         _credorRepository = credorRepository;
         _pessoaRepository = pessoaRepository;
+        _unitOfWork = unitOfWork;
     }
     public async Task<Result<CriarDividaResponse>> Handle(CriarDividaRequest request, CancellationToken cancellationToken)
     {
@@ -41,6 +43,7 @@ public class CriarDividaRequestHandler
         };
 
         await _dividaRepository.CriarDividaAsync(divida);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success(new CriarDividaResponse(divida.Id, divida.Valor, divida.DataDeVencimento));
     }
 }

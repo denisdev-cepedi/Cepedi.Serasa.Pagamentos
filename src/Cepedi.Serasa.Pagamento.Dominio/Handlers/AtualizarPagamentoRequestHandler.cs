@@ -10,13 +10,15 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class AtualizarPagamentoRequestHandler :
     IRequestHandler<AtualizarPagamentoRequest, Result<AtualizarPagamentoResponse>>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IPagamentoRepository _pagamentoRepository;
     private readonly ILogger<AtualizarPagamentoRequestHandler> _logger;
 
-    public AtualizarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ILogger<AtualizarPagamentoRequestHandler> logger)
+    public AtualizarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ILogger<AtualizarPagamentoRequestHandler> logger, IUnitOfWork unitOfWork)
     {
         _pagamentoRepository = pagamentoRepository;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<AtualizarPagamentoResponse>> Handle(AtualizarPagamentoRequest request, CancellationToken cancellationToken)
@@ -32,6 +34,7 @@ public class AtualizarPagamentoRequestHandler :
         pagamentoEntity.AtualizarValor(request.Valor);
 
         await _pagamentoRepository.AtualizarPagamentoAsync(pagamentoEntity);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(new AtualizarPagamentoResponse(pagamentoEntity.Valor));
     }
