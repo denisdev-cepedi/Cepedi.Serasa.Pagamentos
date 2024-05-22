@@ -22,14 +22,6 @@ public class CriarCredorRequestHandler
 
     public async Task<Result<CriarCredorResponse>> Handle(CriarCredorRequest request, CancellationToken cancellationToken)
     {
-        //CorrigirErro
-        var credorEntity = await _CredorRepository.ObterCredorAsync(request.Id);
-
-        if (credorEntity == null)
-        {
-            return Result.Error<CriarCredorResponse>(
-               new Compartilhado.Excecoes.ExcecaoAplicacao(CredorErros.CredorInexistente));
-        }
 
         var Credor = new CredorEntity()
         {
