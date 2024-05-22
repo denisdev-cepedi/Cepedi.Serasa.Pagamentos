@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Cepedi.Serasa.Pagamento.Compartilhado;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using OperationResult;
@@ -24,7 +25,7 @@ public async Task<Result<ObtemDividasResponse>> Handle(ObtemDividasRequest reque
         if (dividaEntity == null)
         {
             return Result.Error<ObtemDividasResponse>(new Compartilhado.
-                Excecoes.SemResultadosException());
+                Excecoes.ExcecaoAplicacao(DividaErros.SemResultados));
         }
 
         return Result.Success(new ObtemDividasResponse(dividaEntity.Select(x => new ObtemDividaResponse(x.Valor, x.DataDeVencimento)).ToList()));

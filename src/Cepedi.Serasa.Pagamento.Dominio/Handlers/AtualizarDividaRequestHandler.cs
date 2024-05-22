@@ -1,4 +1,5 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using OperationResult;
@@ -23,12 +24,16 @@ public class AtualizarDividaRequestHandler : IRequestHandler<AtualizarDividaRequ
         if (dividaEntity == null)
         {
             return Result.Error<AtualizarDividaResponse>(new Compartilhado.
-                Excecoes.SemResultadosException());
+                Excecoes.ExcecaoAplicacao(DividaErros.DividaNaoEncontrada));
         }
 
         dividaEntity.AtualizarDados(request.Valor, request.DataDeVencimento);
 
-        await _dividaRepository.AtualizarDividaAsync(dividaEntity);
+        var response = await _dividaRepository.AtualizarDividaAsync(dividaEntity);
+
+        if(response == null){
+            return Result.Error<AtualizarDividaResponse>(new Compartilhado.Excecoes.ExcecaoAplicacao(DividaErros.ErroGravacaoDivida));
+        }
 
         return Result.Success(new AtualizarDividaResponse(dividaEntity.Valor, dividaEntity.DataDeVencimento));
     }
