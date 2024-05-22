@@ -25,7 +25,6 @@ public class CredorErros
         Tipo = ETipoErro.Alerta
     };
 
-
     public static ResultadoErro ErroGravacaoCredor = new()
     {
         Titulo = "Ocorreu um erro na gravação",
@@ -39,4 +38,55 @@ public class CredorErros
         Descricao = "Os dados enviados na requisição são inválidos",
         Tipo = ETipoErro.Erro
     };
+
+    public static ResultadoErro CredorJaCadastrado = new()
+    {
+        Titulo = "Credor já cadastrado",
+        Descricao = "O Credor informado já está cadastrado",
+        Tipo = ETipoErro.Erro
+    };
+    
+    public static ResultadoErro CredorNaoPodeSerAtualizado = new()
+    {
+        Titulo = "Credor não pode ser atualizado",
+        Descricao = "O Credor informado não pode ser atualizado",
+        Tipo = ETipoErro.Erro
+    };
+    
+    public static ResultadoErro CredorNaoPodeSerRemovido = new()
+    {
+        Titulo = "Credor não pode ser removido",
+        Descricao = "O Credor informado não pode ser removido",
+        Tipo = ETipoErro.Erro
+    };
+    
+    public static ResultadoErro CredorNaoPossuiDadosAtualizados = new()
+    {
+        Titulo = "Credor não possui dados atualizados",
+        Descricao = "O Credor informado não possui dados atualizados",
+        Tipo = ETipoErro.Erro
+    };
+    
+    public static ResultadoErro CredorNaoPossuiDadosParaRemover = new()
+    {
+        Titulo = "Credor não possui dados para remover",
+        Descricao = "O Credor informado não possui dados para remover",
+        Tipo = ETipoErro.Erro
+    };
+    
+    public static ResultadoErro CredorNaoPossuiDadosParaAtualizar = new()
+    {
+        Titulo = "Credor não possui dados para atualizar",
+        Descricao = "O Credor informado não possui dados para atualizar",
+        Tipo = ETipoErro.Erro
+    };
+
+    
+    public static ResultadoErro CredorRemovido = new()
+    {
+        Titulo = "Credor removido com sucesso!",
+        Descricao = "O Credor informado foi removido",
+        Tipo = ETipoErro.Erro
+    };
+    
 }

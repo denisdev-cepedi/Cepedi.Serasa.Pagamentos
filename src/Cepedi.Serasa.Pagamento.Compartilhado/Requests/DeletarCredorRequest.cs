@@ -4,7 +4,7 @@ using OperationResult;
 
 namespace Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 
-public class ExcluirCredorRequest : IRequest<Result<ExcluirCredorResponse>>
+public class DeletarCredorRequest : IRequest<Result<DeletarCredorResponse>>
 {
     public int Id { get; set; }
 
