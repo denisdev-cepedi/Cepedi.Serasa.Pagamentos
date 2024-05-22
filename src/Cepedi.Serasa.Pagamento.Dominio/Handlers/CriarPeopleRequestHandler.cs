@@ -21,13 +21,14 @@ public class CriarPessoaRequestHandler : IRequestHandler<CriarPessoaRequest, Res
     }
     public async Task<Result<CriarPessoaResponse>> Handle(CriarPessoaRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Testando Elastic Zaca Troll");
+
         var pessoa = new PessoaEntity()
         {
             Nome = request.Nome,
             Cpf = request.Cpf,
         };
 
-        await _pessoaRepository.CriarPessoaAsync(pessoa);
-        return Result.Success(new CriarPessoaResponse(pessoa.Id, pessoa.Nome));
+        await _pessoaRepository.CriarPessoaAsync(pessoa); return Result.Success(new CriarPessoaResponse(pessoa.Id, pessoa.Nome));
     }
 }
