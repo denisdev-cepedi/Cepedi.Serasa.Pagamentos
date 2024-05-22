@@ -38,7 +38,7 @@ public class ObterPessoaRequestHandler : IRequestHandler<ObterPessoaRequest, Res
         else
         {
             pessoaEntity = await _pessoaQueryRepository.ObterPessoasDapperAsync(request.Id);
-            if (pessoaEntity == null) return Result.Error<ObterPessoaResponse>(new Compartilhado.Excecoes.ExcecaoAplicacao(PagamentoErros.PagamentoNaoEncontrado));
+            if (pessoaEntity == null) return Result.Error<ObterPessoaResponse>(new Compartilhado.Excecoes.ExcecaoAplicacao(PessoaErros.PessoaNaoEncontrada));
             await _cache.SalvarAsync($"Pessoa:{pessoaEntity.Id}", pessoaEntity, 1800);
             return Result.Success(new ObterPessoaResponse(pessoaEntity.Nome));
 

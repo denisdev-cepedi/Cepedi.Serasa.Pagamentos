@@ -1,4 +1,5 @@
-﻿using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
+﻿using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
+using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
@@ -36,7 +37,7 @@ public class AtualizarPessoaRequestHandler : IRequestHandler<AtualizarPessoaRequ
         if (pessoaEntity == null)
         {
             return Result.Error<AtualizarPessoaResponse>(new Compartilhado.
-                Excecoes.SemResultadosException());
+                Excecoes.ExcecaoAplicacao(PessoaErros.PessoaNaoEncontrada));
         }
 
         pessoaEntity.Atualizar(request.Nome);
