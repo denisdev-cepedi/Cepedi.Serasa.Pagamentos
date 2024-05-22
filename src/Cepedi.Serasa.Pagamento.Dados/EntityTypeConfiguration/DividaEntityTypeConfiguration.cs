@@ -11,6 +11,7 @@ public class DividaEntityTypeConfiguration : IEntityTypeConfiguration<DividaEnti
         builder.ToTable("Divida");
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Valor).IsRequired();
+        builder.Property(c => c.DividaAberta);
         builder.Property(c => c.DataDeVencimento).IsRequired();
 
         builder.Property(c => c.IdCredor).IsRequired();
@@ -23,6 +24,7 @@ public class DividaEntityTypeConfiguration : IEntityTypeConfiguration<DividaEnti
 
         builder.HasOne<PessoaEntity>(c => c.Pessoa).
             WithMany().
-            HasForeignKey(c => c.IdPessoa);    
+            HasForeignKey(c => c.IdPessoa);
+
     }
 }

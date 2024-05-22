@@ -64,5 +64,15 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
 
             return pagamentoEntity;
         }
+
+        public async Task<DividaEntity> QuitarPagamentoAsync(DividaEntity divida)
+        {
+            _context.Divida.Update(divida);
+
+            await _context.SaveChangesAsync();
+
+            return divida;
+        }
     }
+
 }

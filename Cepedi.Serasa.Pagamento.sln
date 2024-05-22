@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07 - Itens", "07 - Itens", 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		README.md = README.md
+		Cepedi.Serasa.Pagamento.postman_collection.json = Cepedi.Serasa.Pagamento.postman_collection.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cepedi.Serasa.Pagamento.Api", "src\Cepedi.Serasa.Pagamento.Api\Cepedi.Serasa.Pagamento.Api.csproj", "{A270F0C3-BADF-4841-A4A1-60E6A8788540}"
