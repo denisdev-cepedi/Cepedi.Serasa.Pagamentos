@@ -41,8 +41,8 @@ namespace Cepedi.Serasa.Pagamento.IoC
             // Cache Redis
             services.AddStackExchangeRedisCache(obj =>
             {
-                obj.Configuration = configuration["Redis::Connection"];
-                obj.InstanceName = configuration["Redis::Instance"];
+                obj.Configuration = configuration["Redis:Connection"];
+                obj.InstanceName = configuration["Redis:Instance"];
             });
 
             services.AddSingleton<IDistributedCache, RedisCache>();
