@@ -1,4 +1,5 @@
-﻿using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
+﻿using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
+using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
 using MediatR;
@@ -21,7 +22,7 @@ public class DeletarPessoaRequestHandler : IRequestHandler<DeletarPessoaRequest,
     public async Task<Result<DeletarPessoaResponse>> Handle(DeletarPessoaRequest request, CancellationToken cancellationToken)
     {
         var pessoaEntity = await _pessoaRepository.ObterPessoaAsync(request.Id);
-        if (pessoaEntity == null) return Result.Error<DeletarPessoaResponse>(new Compartilhado.Excecoes.SemResultadosException());
+        if (pessoaEntity == null) return Result.Error<DeletarPessoaResponse>(new Compartilhado.Excecoes.ExcecaoAplicacao(PagamentoErros.PagamentoNaoEncontrado));
         await _pessoaRepository.DeletarPessoaAsync(pessoaEntity.Id);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success(new DeletarPessoaResponse(pessoaEntity.Id));

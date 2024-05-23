@@ -29,6 +29,12 @@ public class CriarPessoaRequestHandler : IRequestHandler<CriarPessoaRequest, Res
             Cpf = request.Cpf,
         };
 
+        if (pessoa == null)
+        {
+            return Result.Error<CriarPessoaResponse>(
+            new Compartilhado.Excecoes.ExcecaoAplicacao(PessoaErros.PessoaNaoEncontrada));
+        }
+
         await _pessoaRepository.CriarPessoaAsync(pessoa);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success(new CriarPessoaResponse(pessoa.Id, pessoa.Nome));
