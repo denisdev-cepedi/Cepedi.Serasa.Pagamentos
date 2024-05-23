@@ -9,13 +9,15 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class ExcluirCredorRequestHandler :
     IRequestHandler<ExcluirCredorRequest, Result<ExcluirCredorResponse>>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ICredorRepository _credorRepository;
     private readonly ILogger<ExcluirCredorRequestHandler> _logger;
 
-    public ExcluirCredorRequestHandler(ICredorRepository CredorRepository, ILogger<ExcluirCredorRequestHandler> logger)
+    public ExcluirCredorRequestHandler(ICredorRepository CredorRepository, ILogger<ExcluirCredorRequestHandler> logger, IUnitOfWork unitOfWork)
     {
         _credorRepository = CredorRepository;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<ExcluirCredorResponse>> Handle(ExcluirCredorRequest request, CancellationToken cancellationToken)
@@ -29,6 +31,8 @@ public class ExcluirCredorRequestHandler :
         }
 
         await _credorRepository.ExcluirCredorAsync(CredorEntity.Id);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);        
 
         return Result.Success(new ExcluirCredorResponse(CredorEntity.Id));
 

@@ -10,13 +10,15 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class DeletarPagamentoRequestHandler :
     IRequestHandler<DeletarPagamentoRequest, Result<DeletarPagamentoResponse>>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IPagamentoRepository _pagamentoRepository;
     private readonly ILogger<DeletarPagamentoRequestHandler> _logger;
 
-    public DeletarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ILogger<DeletarPagamentoRequestHandler> logger)
+    public DeletarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ILogger<DeletarPagamentoRequestHandler> logger, IUnitOfWork unitOfWork)
     {
         _pagamentoRepository = pagamentoRepository;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<DeletarPagamentoResponse>> Handle(DeletarPagamentoRequest request, CancellationToken cancellationToken)
@@ -30,6 +32,8 @@ public class DeletarPagamentoRequestHandler :
         }
 
         await _pagamentoRepository.DeletarPagamentoAsync(pagamentoEntity.Id);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(new DeletarPagamentoResponse(pagamentoEntity.Id));
     }

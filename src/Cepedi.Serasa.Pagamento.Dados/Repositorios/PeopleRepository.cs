@@ -16,7 +16,7 @@ public class PessoaRepository : IPessoaRepository
     {
         _context.Pessoa.Update(pessoa);
 
-        await _context.SaveChangesAsync();
+
 
         return pessoa;
     }
@@ -24,7 +24,7 @@ public class PessoaRepository : IPessoaRepository
     public async Task<PessoaEntity> CriarPessoaAsync(PessoaEntity pessoa)
     {
         _context.Pessoa.Add(pessoa);
-        await _context.SaveChangesAsync();
+
         return pessoa;
     }
 
@@ -34,7 +34,7 @@ public class PessoaRepository : IPessoaRepository
         if (pessoaEntity == null) return null;
 
         _context.Pessoa.Remove(pessoaEntity);
-        await _context.SaveChangesAsync();
+
         return pessoaEntity;
     }
 
