@@ -2,6 +2,7 @@
 using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cepedi.Serasa.Pagamento.Api.Controllers;
@@ -9,6 +10,7 @@ namespace Cepedi.Serasa.Pagamento.Api.Controllers;
 [ApiController]
 [Route("[controller]")]
 
+[Authorize]
 public class PessoaController : BaseController
 {
     private readonly ILogger<PessoaController> _logger;
