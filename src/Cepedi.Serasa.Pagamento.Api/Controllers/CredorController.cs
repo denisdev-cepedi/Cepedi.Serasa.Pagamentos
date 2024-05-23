@@ -42,9 +42,9 @@ public class CredorController : BaseController
         [FromQuery] ObterCredorRequest request) => await SendCommand(request);
 
     [HttpDelete]
-    [ProducesResponseType(typeof(ExcluirCredorResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DeletarCredorResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResultadoErro), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ExcluirCredorResponse>> ExcluirCredorAsync(
-        [FromQuery] ExcluirCredorRequest request) => await SendCommand(request);
+    public async Task<ActionResult<DeletarCredorResponse>> DeletarCredorAsync(
+        [FromQuery] DeletarCredorRequest request) => await SendCommand(request);
 
 }

@@ -37,7 +37,7 @@ public class CredorRepository : ICredorRepository
         return await _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<CredorEntity> ExcluirCredorAsync(int id)
+    public async Task<CredorEntity> DeletarCredorAsync(int id)
     {
         var Credor = await _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
         _context.Credor.Remove(Credor);

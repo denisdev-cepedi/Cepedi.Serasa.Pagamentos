@@ -4,6 +4,7 @@ using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using OperationResult;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 
 namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class AtualizarCredorRequestHandler :
@@ -27,8 +28,8 @@ public class AtualizarCredorRequestHandler :
 
         if (CredorEntity == null)
         {
-            return Result.Error<AtualizarCredorResponse>(new Compartilhado.
-                Excecoes.SemResultadosException());
+            return Result.Error<AtualizarCredorResponse>(
+                new Compartilhado.Excecoes.ExcecaoAplicacao(CredorErros.CredorInexistente));
         }
 
         CredorEntity.Atualizar(request.Nome);

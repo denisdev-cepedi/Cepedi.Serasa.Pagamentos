@@ -4,6 +4,7 @@ using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using OperationResult;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 
 namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class ObterCredorRequestHandler :
@@ -26,7 +27,7 @@ public class ObterCredorRequestHandler :
         if (CredorEntity == null)
         {
             return Result.Error<ObterCredorResponse>(new Compartilhado.
-                Excecoes.SemResultadosException());
+                Excecoes.ExcecaoAplicacao(CredorErros.CredorInexistente));
         }
 
         return Result.Success(new ObterCredorResponse(CredorEntity.Nome));
