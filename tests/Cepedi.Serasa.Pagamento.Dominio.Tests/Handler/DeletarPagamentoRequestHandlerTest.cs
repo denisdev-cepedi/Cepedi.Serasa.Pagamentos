@@ -54,7 +54,7 @@ public class DeletarPagamentoRequestHandlerTest
 
         // Assert
         Assert.True(result.IsSuccess == false);
-        Assert.IsType<SemResultadosException>(result.Exception);
+        Assert.IsType<ExcecaoAplicacao>(result.Exception);
 
         _mockPagamentoRepository.Verify(repo => repo.ObterPagamentoAsync(request.Id), Times.Once);
         _mockPagamentoRepository.Verify(repo => repo.DeletarPagamentoAsync(It.IsAny<int>()), Times.Never); // Deletion not called

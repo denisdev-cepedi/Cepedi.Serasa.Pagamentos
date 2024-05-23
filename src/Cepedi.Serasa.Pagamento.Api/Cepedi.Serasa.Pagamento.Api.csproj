@@ -9,6 +9,8 @@
     <RootNamespace>$namespace$.WebApi</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <_ContentIncludedByDefault Remove="appsettings.Development.json" />
   </ItemGroup>

@@ -11,13 +11,15 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 
 public class CriarPessoaRequestHandler : IRequestHandler<CriarPessoaRequest, Result<CriarPessoaResponse>>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CriarPessoaRequestHandler> _logger;
     private readonly IPessoaRepository _pessoaRepository;
 
-    public CriarPessoaRequestHandler(ILogger<CriarPessoaRequestHandler> logger, IPessoaRepository pessoaRepository)
+    public CriarPessoaRequestHandler(ILogger<CriarPessoaRequestHandler> logger, IPessoaRepository pessoaRepository, IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _pessoaRepository = pessoaRepository;
+        _unitOfWork = unitOfWork;
     }
     public async Task<Result<CriarPessoaResponse>> Handle(CriarPessoaRequest request, CancellationToken cancellationToken)
     {
@@ -28,6 +30,7 @@ public class CriarPessoaRequestHandler : IRequestHandler<CriarPessoaRequest, Res
         };
 
         await _pessoaRepository.CriarPessoaAsync(pessoa);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success(new CriarPessoaResponse(pessoa.Id, pessoa.Nome));
     }
 }
