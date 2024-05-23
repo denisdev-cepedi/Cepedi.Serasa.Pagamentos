@@ -1,4 +1,5 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using OperationResult;
@@ -25,10 +26,16 @@ public class DeletarDividaRequestHandler : IRequestHandler<DeletarDividaRequest,
         if (dividaEntity == null)
         {
             return Result.Error<DeletarDividaResponse>(new Compartilhado.
-                Excecoes.SemResultadosException());
+                Excecoes.ExcecaoAplicacao(DividaErros.Generico));
         }
 
-        await _dividaRepository.DeletarDividaAsync(dividaEntity.Id);
+        var response = await _dividaRepository.DeletarDividaAsync(dividaEntity.Id);
+
+
+        if(response == null){
+            return Result.Error<DeletarDividaResponse>(
+                new Compartilhado.Excecoes.ExcecaoAplicacao(DividaErros.ErroGravacaoDivida));
+        }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
