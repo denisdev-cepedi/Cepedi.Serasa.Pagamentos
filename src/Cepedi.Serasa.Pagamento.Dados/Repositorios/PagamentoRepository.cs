@@ -18,7 +18,7 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
         {
             _context.Pagamento.Update(pagamento);
 
-            await _context.SaveChangesAsync();
+
 
             return pagamento;
         }
@@ -27,7 +27,7 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
         {
             _context.Pagamento.Add(pagamento);
 
-            await _context.SaveChangesAsync();
+
 
             return pagamento;
         }
@@ -60,7 +60,7 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
 
             _context.Pagamento.Remove(pagamentoEntity);
 
-            await _context.SaveChangesAsync();
+
 
             return pagamentoEntity;
         }
@@ -69,7 +69,7 @@ namespace Cepedi.Serasa.Pagamento.Dados.Repositories
         {
             _context.Divida.Update(divida);
 
-            await _context.SaveChangesAsync();
+
 
             return divida;
         }

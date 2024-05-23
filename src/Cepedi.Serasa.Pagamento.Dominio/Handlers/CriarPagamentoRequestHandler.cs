@@ -11,17 +11,19 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Handlers;
 public class CriarPagamentoRequestHandler
     : IRequestHandler<CriarPagamentoRequest, Result<CriarPagamentoResponse>>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CriarPagamentoRequestHandler> _logger;
     private readonly ICredorRepository _credorRepository;
     private readonly IPagamentoRepository _pagamentoRepository;
     private readonly IDividaRepository _dividaRepository;
 
-    public CriarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ICredorRepository credorRepository, IDividaRepository dividaRepository, ILogger<CriarPagamentoRequestHandler> logger)
+    public CriarPagamentoRequestHandler(IPagamentoRepository pagamentoRepository, ICredorRepository credorRepository, IDividaRepository dividaRepository, ILogger<CriarPagamentoRequestHandler> logger, IUnitOfWork unitOfWork)
     {
         _credorRepository = credorRepository;
         _pagamentoRepository = pagamentoRepository;
         _dividaRepository = dividaRepository;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<CriarPagamentoResponse>> Handle(CriarPagamentoRequest request, CancellationToken cancellationToken)
@@ -65,7 +67,7 @@ public class CriarPagamentoRequestHandler
 
         await _pagamentoRepository.CriarPagamentoAsync(pagamento);
 
-
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success(new CriarPagamentoResponse(pagamento.Id, pagamento.Valor));
     }
 }

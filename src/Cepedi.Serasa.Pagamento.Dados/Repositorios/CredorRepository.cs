@@ -15,14 +15,14 @@ public class CredorRepository : ICredorRepository
     public async Task<CredorEntity> CriarCredorAsync(CredorEntity Credor)
     {
         _context.Credor.Add(Credor);
-        await _context.SaveChangesAsync();
+        // await _context.SaveChangesAsync();
         return Credor;
     }
     public async Task<CredorEntity> AtualizarCredorAsync(CredorEntity Credor)
     {
         _context.Credor.Update(Credor);
 
-        await _context.SaveChangesAsync();
+        // await _context.SaveChangesAsync();
 
         return Credor;
     }
@@ -41,7 +41,7 @@ public class CredorRepository : ICredorRepository
     {
         var Credor = await _context.Credor.Where(e => e.Id == id).FirstOrDefaultAsync();
         _context.Credor.Remove(Credor);
-        await _context.SaveChangesAsync();
+        // await _context.SaveChangesAsync();
         return Credor;
     }
 }

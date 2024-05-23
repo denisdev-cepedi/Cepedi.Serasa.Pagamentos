@@ -15,7 +15,7 @@ public class DividaRepository : IDividaRepository
     public async Task<DividaEntity> AtualizarDividaAsync(DividaEntity divida)
     {
         _context.Divida.Update(divida);
-        await _context.SaveChangesAsync();
+
 
         return divida;
     }
@@ -23,7 +23,7 @@ public class DividaRepository : IDividaRepository
     public async Task<DividaEntity> CriarDividaAsync(DividaEntity divida)
     {
         _context.Divida.Add(divida);
-        await _context.SaveChangesAsync();
+
         return divida;
     }
 
@@ -37,7 +37,7 @@ public class DividaRepository : IDividaRepository
         }
 
         _context.Divida.Remove(divida);
-        await _context.SaveChangesAsync();
+
         return divida;
     }
     public async Task<List<DividaEntity>> ObterDividasAsync()

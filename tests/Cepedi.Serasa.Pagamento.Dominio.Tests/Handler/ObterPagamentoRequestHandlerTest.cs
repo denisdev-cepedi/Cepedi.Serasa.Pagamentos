@@ -1,4 +1,5 @@
-﻿using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
+﻿using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
+using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
 using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Handlers;
@@ -11,56 +12,54 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
 public class ObterPagamentoRequestHandlerTest
 {
+    private readonly Mock<IPagamentoRepository> _pagamentoRepositoryMock;
+    private readonly Mock<ILogger<ObterPagamentoRequestHandler>> _loggerMock;
+    private readonly ObterPagamentoRequestHandler _handler;
+
+    public ObterPagamentoRequestHandlerTest()
+    {
+        _pagamentoRepositoryMock = new Mock<IPagamentoRepository>();
+        _loggerMock = new Mock<ILogger<ObterPagamentoRequestHandler>>();
+        _handler = new ObterPagamentoRequestHandler(_pagamentoRepositoryMock.Object, _loggerMock.Object);
+    }
+
     [Fact]
-    public async Task Handle_ShouldReturnSuccess_WhenPagamentoFound()
+    public async Task Handle_PagamentoExistente_DeveRetornarSucesso()
     {
         // Arrange
-        var fixture = new ObterPagamentoResquestHandlerTestsFixture();
-        var request = new ObterPagamentoRequest { Id = 3 };
-        var expectedValor = 40;
-        var expectedDataDeVencimento = new DateTime(2024, 05, 14);
-        fixture.MockPagamentoRepository.Setup(r => r.ObterPagamentoAsync(request.Id))
-            .ReturnsAsync(new PagamentoEntity { Valor = expectedValor, DataDeVencimento = expectedDataDeVencimento });
+        var pagamentoId = 1;
+        var pagamento = new PagamentoEntity { Id = pagamentoId, Valor = 500.0 };
+        var request = new ObterPagamentoRequest { Id = pagamentoId };
 
-        var handler = new ObterPagamentoRequestHandler(fixture.MockPagamentoRepository.Object, fixture.MockLogger.Object);
+        _pagamentoRepositoryMock.Setup(repo => repo.ObterPagamentoAsync(pagamentoId))
+            .ReturnsAsync(pagamento);
 
         // Act
-        var result = await handler.Handle(request, CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
-        Assert.Equal(expectedValor, result.Value.valor);
+        Assert.Equal(pagamento.Valor, result.Value.valor);
+        _pagamentoRepositoryMock.Verify(repo => repo.ObterPagamentoAsync(pagamentoId), Times.Once);
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenPagamentoNotFound()
+    public async Task Handle_PagamentoNaoExistente_DeveRetornarErro()
     {
         // Arrange
-        var fixture = new ObterPagamentoResquestHandlerTestsFixture();
-        var request = new ObterPagamentoRequest { Id = 1 };
-        fixture.MockPagamentoRepository.Setup(r => r.ObterPagamentoAsync(request.Id))
+        var pagamentoId = 1;
+        var request = new ObterPagamentoRequest { Id = pagamentoId };
+
+        _pagamentoRepositoryMock.Setup(repo => repo.ObterPagamentoAsync(pagamentoId))
             .ReturnsAsync((PagamentoEntity)null);
 
-        var handler = new ObterPagamentoRequestHandler(fixture.MockPagamentoRepository.Object, fixture.MockLogger.Object);
-
         // Act
-        var result = await handler.Handle(request, CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.IsType<SemResultadosException>(result.Exception);
+        var excecaoAplicacao = Assert.IsType<ExcecaoAplicacao>(result.Exception);
+        Assert.Equal(PagamentoErros.PagamentoNaoEncontrado, excecaoAplicacao.ResponseErro);
+        _pagamentoRepositoryMock.Verify(repo => repo.ObterPagamentoAsync(pagamentoId), Times.Once);
     }
 }
-
-public class ObterPagamentoResquestHandlerTestsFixture
-    {
-        public Mock<IPagamentoRepository> MockPagamentoRepository { get; }
-        public Mock<ILogger<ObterPagamentoRequestHandler>> MockLogger { get; }
-
-        public ObterPagamentoResquestHandlerTestsFixture()
-        {
-            MockPagamentoRepository = new Mock<IPagamentoRepository>();
-            MockLogger = new Mock<ILogger<ObterPagamentoRequestHandler>>();
-        }
-    }
