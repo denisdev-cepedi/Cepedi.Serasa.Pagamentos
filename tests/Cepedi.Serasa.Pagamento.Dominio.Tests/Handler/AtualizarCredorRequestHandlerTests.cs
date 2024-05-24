@@ -1,6 +1,7 @@
 ﻿
 using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
+using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Handlers;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
@@ -18,8 +19,11 @@ public class AtualizarCredorRequestHandlerTests
     private readonly ILogger<AtualizarCredorRequestHandler> _logger = Substitute.For<ILogger<AtualizarCredorRequestHandler>>();
     private readonly AtualizarCredorRequestHandler _sut;
 
-    public AtualizarCredorRequestHandlerTests(){
-        _sut = new AtualizarCredorRequestHandler(_credorRepository, _logger);
+    private readonly UnitOfWork _unitOfWork = Substitute.For<UnitOfWork>();
+
+    public AtualizarCredorRequestHandlerTests()
+    {
+        _sut = new AtualizarCredorRequestHandler(_credorRepository, _logger, _unitOfWork);
     }
     [Fact]
     public async Task AtualizarCredor_DeveRetornarSucesso()

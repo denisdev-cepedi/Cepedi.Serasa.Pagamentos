@@ -1,4 +1,5 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado;
+using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -14,8 +15,11 @@ public class AtualizarDividaRequestHandlerTests
     private readonly ILogger<AtualizarDividaRequestHandler> _logger = Substitute.For<ILogger<AtualizarDividaRequestHandler>>();
     private readonly AtualizarDividaRequestHandler _sut;
 
-    public AtualizarDividaRequestHandlerTests(){
-        _sut = new AtualizarDividaRequestHandler(_dividaRepository, _logger);
+    private readonly UnitOfWork _unitOfWork = Substitute.For<UnitOfWork>();
+
+    public AtualizarDividaRequestHandlerTests()
+    {
+        _sut = new AtualizarDividaRequestHandler(_dividaRepository, _logger, _unitOfWork);
     }
     [Fact]
     public async Task AtualizarDivida_DeveRetornarSucesso()

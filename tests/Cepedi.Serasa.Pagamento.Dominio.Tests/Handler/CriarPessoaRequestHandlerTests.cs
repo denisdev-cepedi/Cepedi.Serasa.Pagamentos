@@ -1,5 +1,6 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
+using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Handlers;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
@@ -17,9 +18,11 @@ public class CriarPessoaRequestHandlerTests
     private readonly ILogger<CriarPessoaRequestHandler> _logger = Substitute.For<ILogger<CriarPessoaRequestHandler>>();
     private readonly CriarPessoaRequestHandler _sut;
 
+    private readonly UnitOfWork _unitOfWork = Substitute.For<UnitOfWork>();
+
     public CriarPessoaRequestHandlerTests()
     {
-        _sut = new CriarPessoaRequestHandler(_logger, _pessoaRepository);
+        _sut = new CriarPessoaRequestHandler(_logger, _pessoaRepository, _unitOfWork);
     }
 
     [Fact]

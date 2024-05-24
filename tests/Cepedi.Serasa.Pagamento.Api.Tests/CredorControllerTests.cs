@@ -59,7 +59,7 @@ public class CredorControllerTests
     public async Task DeletarCredor_DeveRetornarSucesso()
     {
         var request = new DeletarCredorRequest { Id = 1 };
-        _mediator.Send(request).ReturnsForAnyArgs(Result.Success(new DeletarCredorResponse("")));
+        _mediator.Send(request).ReturnsForAnyArgs(Result.Success(new DeletarCredorResponse(request.Id)));
 
         await _sut.DeletarCredorAsync(request);
 

@@ -9,8 +9,6 @@ namespace Cepedi.Serasa.Pagamento.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
-[Authorize]
 public class PessoaController : BaseController
 {
     private readonly ILogger<PessoaController> _logger;

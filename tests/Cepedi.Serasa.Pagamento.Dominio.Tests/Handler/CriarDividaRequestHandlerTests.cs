@@ -1,5 +1,6 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
+using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
 using FluentAssertions;
@@ -21,9 +22,11 @@ public class CriarDividaRequestHandlerTests
     private readonly ILogger<CriarDividaRequestHandler> _logger = Substitute.For<ILogger<CriarDividaRequestHandler>>();
     private readonly CriarDividaRequestHandler _sut;
 
+    private readonly UnitOfWork _unitOfWork = Substitute.For<UnitOfWork>();
+
     public CriarDividaRequestHandlerTests()
     {
-        _sut = new CriarDividaRequestHandler(_logger, _dividaRepository, _credorRepository, _pessoaRepository);
+        _sut = new CriarDividaRequestHandler(_logger, _dividaRepository, _credorRepository, _pessoaRepository, _unitOfWork);
     }
 
     [Fact]

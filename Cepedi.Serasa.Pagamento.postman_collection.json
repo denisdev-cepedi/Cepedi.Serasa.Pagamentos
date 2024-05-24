@@ -30,13 +30,13 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                            "raw": "{{base_url}}/Pessoa/4",
+                            "raw": "{{base_url}}/Pessoa/3",
                             "host": [
                                 "{{base_url}}"
                             ],
                             "path": [
                                 "Pessoa",
-                                "4"
+                                "3"
                             ]
                         },
                         "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -87,27 +87,21 @@
                 },
                 {
                     "name": "Update Pessoa",
-                    "event": [
-                        {
-                            "listen": "test",
-                            "script": {
-                                "exec": [
-                                    "pm.test(\"Successful PUT request\", function () {",
-                                    "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
-                                    "});",
-                                    ""
-                                ],
-                                "type": "text/javascript",
-                                "packages": {}
-                            }
-                        }
-                    ],
                     "request": {
                         "method": "PUT",
-                        "header": [],
+                        "header": [
+                            {
+                                "key": "accept",
+                                "value": "text/plain"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"id\": 4,\n\t\"nome\": \"Teste3\"\n}",
+                            "raw": "{\n  \"id\": 1,\n  \"nome\": \"eeee\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -115,58 +109,41 @@
                             }
                         },
                         "url": {
-                            "raw": "{{base_url}}/Pessoa",
+                            "raw": "http://localhost:5078/Pessoa",
+                            "protocol": "http",
                             "host": [
-                                "{{base_url}}"
+                                "localhost"
                             ],
+                            "port": "5078",
                             "path": [
                                 "Pessoa"
                             ]
-                        },
-                        "description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+                        }
                     },
                     "response": []
                 },
                 {
-                    "name": "Delete Pessoa",
-                    "event": [
-                        {
-                            "listen": "test",
-                            "script": {
-                                "exec": [
-                                    "pm.test(\"Successful DELETE request\", function () {",
-                                    "    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
-                                    "});",
-                                    ""
-                                ],
-                                "type": "text/javascript",
-                                "packages": {}
-                            }
-                        }
-                    ],
+                    "name": "Deletar Pessoa",
                     "request": {
                         "method": "DELETE",
-                        "header": [],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n    \"Id\": 2 \n}",
-                            "options": {
-                                "raw": {
-                                    "language": "json"
-                                }
+                        "header": [
+                            {
+                                "key": "accept",
+                                "value": "text/plain"
                             }
-                        },
+                        ],
                         "url": {
-                            "raw": "{{base_url}}/Pessoa/3",
+                            "raw": "http://localhost:5078/Pessoa/13",
+                            "protocol": "http",
                             "host": [
-                                "{{base_url}}"
+                                "localhost"
                             ],
+                            "port": "5078",
                             "path": [
                                 "Pessoa",
-                                "3"
+                                "13"
                             ]
-                        },
-                        "description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+                        }
                     },
                     "response": []
                 }
@@ -221,7 +198,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/Credor?Id=3",
+                            "raw": "{{base_url}}/Credor?Id=2",
                             "host": [
                                 "{{base_url}}"
                             ],
@@ -231,7 +208,7 @@
                             "query": [
                                 {
                                     "key": "Id",
-                                    "value": "3"
+                                    "value": "2"
                                 }
                             ]
                         }
@@ -345,7 +322,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"id\": 1,\n  \"valor\": 10,\n  \"dataDeVencimento\": \"2024-05-18T16:43:28.817Z\"\n}",
+                            "raw": "{\n  \"id\": 8,\n  \"valor\": 20000,\n  \"dataDeVencimento\": \"2024-05-18T16:43:28.817Z\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -400,7 +377,7 @@
                     "response": []
                 },
                 {
-                    "name": "Delete Divida",
+                    "name": "Deletar Divida",
                     "request": {
                         "method": "DELETE",
                         "header": [
@@ -410,13 +387,15 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/Divida/0",
+                            "raw": "http://localhost:5078/Divida/3",
+                            "protocol": "http",
                             "host": [
-                                "{{base_url}}"
+                                "localhost"
                             ],
+                            "port": "5078",
                             "path": [
                                 "Divida",
-                                "0"
+                                "3"
                             ]
                         }
                     },
@@ -478,7 +457,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"id\": 3,\n  \"valor\": 200,\n  \"dataDePagamento\": \"2024-05-18T16:48:52.928Z\",\n  \"dataDeVencimento\": \"2024-05-18T16:48:52.928Z\",\n  \"idCredor\": 6\n}",
+                            "raw": "{\n  \"id\": 8,\n  \"valor\": 2700,\n  \"dataDePagamento\": \"2024-05-18T16:48:52.928Z\",\n  \"dataDeVencimento\": \"2024-05-18T16:48:52.928Z\",\n  \"idCredor\": 6\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"

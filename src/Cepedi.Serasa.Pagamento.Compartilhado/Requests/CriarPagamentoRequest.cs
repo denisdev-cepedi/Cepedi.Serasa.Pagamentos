@@ -11,7 +11,5 @@ public class CriarPagamentoRequest : IRequest<Result<CriarPagamentoResponse>>
 
     public DateTime DataDeVencimento { get; set; }
 
-    public int IdCredor { get; set; }
-
     public int IdDivida { get; set; }
 }

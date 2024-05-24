@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NSubstitute;
 using OperationResult;
+using Cepedi.Serasa.Pagamento.Dados;
 
 namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
@@ -18,9 +19,11 @@ public class AtualizarPagamentoRequestHandlerTests
     private readonly ILogger<AtualizarPagamentoRequestHandler> _logger = Substitute.For<ILogger<AtualizarPagamentoRequestHandler>>();
     private readonly AtualizarPagamentoRequestHandler _sut;
 
+    private readonly UnitOfWork _unitOfWork = Substitute.For<UnitOfWork>();
+
     public AtualizarPagamentoRequestHandlerTests()
     {
-        _sut = new AtualizarPagamentoRequestHandler(_pagamentoRepository, _logger);
+        _sut = new AtualizarPagamentoRequestHandler(_pagamentoRepository, _logger, _unitOfWork);
     }
 
     [Fact]
