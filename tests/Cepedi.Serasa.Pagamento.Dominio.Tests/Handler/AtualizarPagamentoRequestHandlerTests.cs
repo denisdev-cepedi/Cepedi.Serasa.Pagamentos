@@ -9,17 +9,15 @@ using Moq;
 using NSubstitute;
 using OperationResult;
 using Cepedi.Serasa.Pagamento.Dados;
-
-namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
+using Cepedi.Serasa.Pagamento.Dominio;
 
 public class AtualizarPagamentoRequestHandlerTests
 {
-    private readonly IPagamentoRepository _pagamentoRepository =
-    Substitute.For<IPagamentoRepository>();
+    private readonly IPagamentoRepository _pagamentoRepository = Substitute.For<IPagamentoRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly ILogger<AtualizarPagamentoRequestHandler> _logger = Substitute.For<ILogger<AtualizarPagamentoRequestHandler>>();
     private readonly AtualizarPagamentoRequestHandler _sut;
-
-    private readonly UnitOfWork _unitOfWork = Substitute.For<UnitOfWork>();
 
     public AtualizarPagamentoRequestHandlerTests()
     {
@@ -27,23 +25,42 @@ public class AtualizarPagamentoRequestHandlerTests
     }
 
     [Fact]
-    public async Task AtualizarPagamentoAsync_QuandoAtualizar_DeveRetornarSucesso()
+    public async Task Handle_QuandoPagamentoExistente_DeveRetornarSucesso()
     {
-        //Arrange 
-        var pagamento = new AtualizarPagamentoRequest { Valor = 300 };
-        var pagamentoEntity = new PagamentoEntity { Valor = 300 };
-        _pagamentoRepository.ObterPagamentoAsync(It.IsAny<int>()).ReturnsForAnyArgs(new PagamentoEntity());
-        _pagamentoRepository.AtualizarPagamentoAsync(It.IsAny<PagamentoEntity>())
-            .ReturnsForAnyArgs(pagamentoEntity);
+        // Arrange
+        var request = new AtualizarPagamentoRequest { Id = 1, Valor = 100 };
+        var pagamentoEntity = new PagamentoEntity { Id = 1, Valor = 50 };
 
-        //Act
-        var result = await _sut.Handle(pagamento, CancellationToken.None);
+        _pagamentoRepository.ObterPagamentoAsync(request.Id)
+            .Returns(pagamentoEntity);
 
-        //Assert 
+        _pagamentoRepository.AtualizarPagamentoAsync(Arg.Any<PagamentoEntity>())
+            .Returns(pagamentoEntity);
+
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
         result.Should().BeOfType<Result<AtualizarPagamentoResponse>>().Which
-            .Value.valor.Should().Be(pagamento.Valor);
+            .Value.valor.Should().Be(request.Valor);
+        await _pagamentoRepository.Received(1).AtualizarPagamentoAsync(pagamentoEntity);
+        await _unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
+    }
 
+    [Fact]
+    public async Task Handle_QuandoPagamentoInexistente_DeveRetornarErro()
+    {
+        // Arrange
+        var request = new AtualizarPagamentoRequest { Id = 1, Valor = 100 };
+
+        _pagamentoRepository.ObterPagamentoAsync(request.Id)
+            .Returns((PagamentoEntity)null);
+
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
         result.Should().BeOfType<Result<AtualizarPagamentoResponse>>().Which
-            .Value.valor.Should().Be(pagamentoEntity.Valor);
+            .Value.Should().BeNull();
     }
 }

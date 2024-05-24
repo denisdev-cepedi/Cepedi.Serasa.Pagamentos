@@ -15,10 +15,9 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 public class CriarPessoaRequestHandlerTests
 {
     private readonly IPessoaRepository _pessoaRepository = Substitute.For<IPessoaRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly ILogger<CriarPessoaRequestHandler> _logger = Substitute.For<ILogger<CriarPessoaRequestHandler>>();
     private readonly CriarPessoaRequestHandler _sut;
-
-    private readonly UnitOfWork _unitOfWork = Substitute.For<UnitOfWork>();
 
     public CriarPessoaRequestHandlerTests()
     {
@@ -26,13 +25,32 @@ public class CriarPessoaRequestHandlerTests
     }
 
     [Fact]
-    public async Task CriarPessoaAsync_QuandoCriar_DeveRetornarSucesso()
+    public async Task Handle_DeveCriarPessoaComSucesso()
     {
-        var pessoa = new CriarPessoaRequest { Nome = "Eduardo" };
-        _pessoaRepository.CriarPessoaAsync(It.IsAny<PessoaEntity>()).ReturnsForAnyArgs(new PessoaEntity());
-        var result = await _sut.Handle(pessoa, CancellationToken.None);
+        // Arrange
+        var request = new CriarPessoaRequest
+        {
+            Nome = "João",
+            Cpf = "12345678900"
+        };
 
-        result.Should().BeOfType<Result<CriarPessoaResponse>>().Which.Value.Nome.Should().Be(pessoa.Nome);
-        result.Should().BeOfType<Result<CriarPessoaResponse>>().Which.Value.Nome.Should().NotBeEmpty();
+        var pessoaEntity = new PessoaEntity
+        {
+            Id = 1,
+            Nome = request.Nome,
+            Cpf = request.Cpf
+        };
+
+        _pessoaRepository.CriarPessoaAsync(Arg.Any<PessoaEntity>())
+            .Returns(pessoaEntity);
+
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<Result<CriarPessoaResponse>>().Which
+            .Value.Nome.Should().Be(request.Nome);
+        await _pessoaRepository.Received(1).CriarPessoaAsync(Arg.Any<PessoaEntity>());
+        await _unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
     }
 }

@@ -1,67 +1,66 @@
-﻿// using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
-// using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
-// using Cepedi.Serasa.Pagamento.Dados;
-// using Cepedi.Serasa.Pagamento.Dominio.Entidades;
-// using Cepedi.Serasa.Pagamento.Dominio.Handlers;
-// using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
-// using Microsoft.Extensions.Logging;
-// using Moq;
-// using NSubstitute;
+﻿using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
+using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
+using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
+using Cepedi.Serasa.Pagamento.Dados;
+using Cepedi.Serasa.Pagamento.Dominio.Entidades;
+using Cepedi.Serasa.Pagamento.Dominio.Handlers;
+using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NSubstitute;
+using OperationResult;
 
-// namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
+namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
-// public class DeletarPagamentoRequestHandlerTest
-// {
-//     private readonly Mock<IPagamentoRepository> _mockPagamentoRepository = new Mock<IPagamentoRepository>();
-//     private readonly Mock<ILogger<DeletarPagamentoRequestHandler>> _mockLogger = new Mock<ILogger<DeletarPagamentoRequestHandler>>();
+public class DeletarPagamentoRequestHandlerTests
+{
+    private readonly IPagamentoRepository _pagamentoRepository = Substitute.For<IPagamentoRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
+    private readonly ILogger<DeletarPagamentoRequestHandler> _logger = Substitute.For<ILogger<DeletarPagamentoRequestHandler>>();
+    private readonly DeletarPagamentoRequestHandler _sut;
 
-//     private readonly UnitOfWork _unitOfWork = Substitute.For<UnitOfWork>();
+    public DeletarPagamentoRequestHandlerTests()
+    {
+        _sut = new DeletarPagamentoRequestHandler(_pagamentoRepository, _logger, _unitOfWork);
+    }
 
-//     [Fact]
-//     public async Task Should_Delete_Pagamento_Successfully()
-//     {
-//         // Arrange
-//         var request = new DeletarPagamentoRequest { Id = 1 };
-//         var pagamentoEntity = new PagamentoEntity { Id = request.Id };
+    [Fact]
+    public async Task Handle_DeveDeletarPagamentoComSucesso()
+    {
+        // Arrange
+        var request = new DeletarPagamentoRequest { Id = 1 };
 
-//         _mockPagamentoRepository.Setup(repo => repo.ObterPagamentoAsync(request.Id))
-//             .Returns(Task.FromResult(pagamentoEntity));
-//         _mockPagamentoRepository.Setup(repo => repo.DeletarPagamentoAsync(pagamentoEntity.Id))
-//             .Returns(Task.FromResult(pagamentoEntity));
+        var pagamentoEntity = new PagamentoEntity { Id = 1 };
 
-//         var handler = new DeletarPagamentoRequestHandler(_mockPagamentoRepository.Object, _mockLogger.Object, _unitOfWork);
+        _pagamentoRepository.ObterPagamentoAsync(request.Id)
+            .Returns(pagamentoEntity);
 
-//         // Act
-//         var result = await handler.Handle(request, CancellationToken.None);
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
 
-//         // Assert
-//         Assert.True(result.IsSuccess);
-//         Assert.Equal(request.Id, result.Value.id);
+        // Assert
+        result.Should().BeOfType<Result<DeletarPagamentoResponse>>().Which
+            .Value.id.Should().Be(request.Id);
+        await _pagamentoRepository.Received(1).ObterPagamentoAsync(request.Id);
+        await _pagamentoRepository.Received(1).DeletarPagamentoAsync(request.Id);
+        await _unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
+    }
 
-//         _mockPagamentoRepository.Verify(repo => repo.ObterPagamentoAsync(request.Id), Times.Once);
-//         _mockPagamentoRepository.Verify(repo => repo.DeletarPagamentoAsync(pagamentoEntity.Id), Times.Once);
-//     }
+    [Fact]
+    public async Task Handle_QuandoPagamentoNaoEncontrado_DeveRetornarErro()
+    {
+        // Arrange
+        var request = new DeletarPagamentoRequest { Id = 1 };
 
-//     [Fact]
-//     public async Task Should_Return_Error_If_Pagamento_Not_Found()
-//     {
-//         // Arrange
-//         var request = new DeletarPagamentoRequest { Id = 111 };
+        _pagamentoRepository.ObterPagamentoAsync(request.Id)
+            .Returns((PagamentoEntity)null);
 
-//         _mockPagamentoRepository.Setup(repo => repo.ObterPagamentoAsync(request.Id))
-//             .Returns(Task.FromResult<PagamentoEntity>(null));
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
 
-//         var handler = new DeletarPagamentoRequestHandler(_mockPagamentoRepository.Object, _mockLogger.Object, _unitOfWork);
-
-//         // Act
-//         var result = await handler.Handle(request, CancellationToken.None);
-
-//         // Assert
-//         Assert.True(result.IsSuccess == false);
-//         Assert.IsType<ExcecaoAplicacao>(result.Exception);
-
-//         _mockPagamentoRepository.Verify(repo => repo.ObterPagamentoAsync(request.Id), Times.Once);
-//         _mockPagamentoRepository.Verify(repo => repo.DeletarPagamentoAsync(It.IsAny<int>()), Times.Never); // Deletion not called
-//     }
-
-// }
+        // Assert
+        result.Should().BeOfType<Result<DeletarPagamentoResponse>>().Which
+            .Value.Should().BeNull();
+    }
+}
