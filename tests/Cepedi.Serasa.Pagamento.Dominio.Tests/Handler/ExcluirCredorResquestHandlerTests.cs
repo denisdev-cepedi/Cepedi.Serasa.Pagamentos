@@ -1,62 +1,65 @@
-﻿// using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
-// using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
-// using Cepedi.Serasa.Pagamento.Dominio.Entidades;
-// using Cepedi.Serasa.Pagamento.Dominio.Handlers;
-// using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
-// using Microsoft.Extensions.Logging;
-// using Moq;
+﻿using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
+using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
+using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
+using Cepedi.Serasa.Pagamento.Dominio.Entidades;
+using Cepedi.Serasa.Pagamento.Dominio.Handlers;
+using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NSubstitute;
+using OperationResult;
 
-// namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
+namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
-// public class DeletarCredorResquestHandlerTests
-// {
-//     private readonly Mock<ICredorRepository> _mockCredorRepository = new Mock<ICredorRepository>();
-//     private readonly Mock<ILogger<DeletarCredorRequestHandler>> _mockLogger = new Mock<ILogger<DeletarCredorRequestHandler>>();
+public class DeletarCredorRequestHandlerTests
+{
+    private readonly ICredorRepository _credorRepository = Substitute.For<ICredorRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
+    private readonly ILogger<DeletarCredorRequestHandler> _logger = Substitute.For<ILogger<DeletarCredorRequestHandler>>();
+    private readonly DeletarCredorRequestHandler _sut;
 
-//     [Fact]
-//     public async Task Should_Delete_Credor_Successfully()
-//     {
-//         // Arrange
-//         var request = new DeletarCredorRequest { Id = 1 };
-//         var credorEntity = new CredorEntity { Id = request.Id };
+    public DeletarCredorRequestHandlerTests()
+    {
+        _sut = new DeletarCredorRequestHandler(_credorRepository, _logger, _unitOfWork);
+    }
 
-//         _mockCredorRepository.Setup(repo => repo.ObterCredorAsync(request.Id))
-//             .Returns(Task.FromResult(credorEntity));
-//         _mockCredorRepository.Setup(repo => repo.DeletarCredorAsync(credorEntity.Id))
-//             .Returns(Task.FromResult(credorEntity));
+    [Fact]
+    public async Task Handle_DeveDeletarCredorComSucesso()
+    {
+        // Arrange
+        var request = new DeletarCredorRequest { Id = 1 };
 
-//         var handler = new DeletarCredorRequestHandler(_mockCredorRepository.Object, _mockLogger.Object);
+        var credorEntity = new CredorEntity { Id = 1 };
 
-//         // Act
-//         var result = await handler.Handle(request, CancellationToken.None);
+        _credorRepository.ObterCredorAsync(request.Id)
+            .Returns(credorEntity);
 
-//         // Assert
-//         Assert.True(result.IsSuccess);
-//         Assert.Equal(request.Id, result.Value.Id);
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
 
-//         _mockCredorRepository.Verify(repo => repo.ObterCredorAsync(request.Id), Times.Once);
-//         _mockCredorRepository.Verify(repo => repo.DeletarCredorAsync(credorEntity.Id), Times.Once);
-//     }
+        // Assert
+        result.Should().BeOfType<Result<DeletarCredorResponse>>().Which
+            .Value.id.Should().Be(request.Id);
+        await _credorRepository.Received(1).ObterCredorAsync(request.Id);
+        await _credorRepository.Received(1).DeletarCredorAsync(request.Id);
+        await _unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
+    }
 
-//     [Fact]
-//     public async Task Should_Return_Error_If_Credor_Not_Found()
-//     {
-//         // Arrange
-//         var request = new DeletarCredorRequest { Id = 111 };
+    [Fact]
+    public async Task Handle_QuandoCredorNaoEncontrado_DeveRetornarErro()
+    {
+        // Arrange
+        var request = new DeletarCredorRequest { Id = 1 };
 
-//         _mockCredorRepository.Setup(repo => repo.ObterCredorAsync(request.Id))
-//             .Returns(Task.FromResult<CredorEntity>(null));
+        _credorRepository.ObterCredorAsync(request.Id)
+            .Returns((CredorEntity)null);
 
-//         var handler = new DeletarCredorRequestHandler(_mockCredorRepository.Object, _mockLogger.Object);
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
 
-//         // Act
-//         var result = await handler.Handle(request, CancellationToken.None);
-
-//         // Assert
-//         Assert.True(result.IsSuccess == false);
-//         Assert.IsType<SemResultadosException>(result.Exception);
-
-//         _mockCredorRepository.Verify(repo => repo.ObterCredorAsync(request.Id), Times.Once);
-//         _mockCredorRepository.Verify(repo => repo.DeletarCredorAsync(It.IsAny<int>()), Times.Never); // Deletion not called
-//     }
-// }
+        // Assert
+        result.Should().BeOfType<Result<DeletarCredorResponse>>().Which
+            .Value.Should().BeNull();
+    }
+}

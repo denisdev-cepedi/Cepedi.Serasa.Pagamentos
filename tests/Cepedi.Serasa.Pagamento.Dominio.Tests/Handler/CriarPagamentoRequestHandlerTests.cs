@@ -10,85 +10,129 @@ using NSubstitute;
 using OperationResult;
 using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
 using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
+using Cepedi.Serasa.Pagamento.Dados;
 
 namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
 public class CriarPagamentoRequestHandlerTests
 {
-    private readonly Mock<ICredorRepository> _credorRepositoryMock;
-    private readonly Mock<IPagamentoRepository> _pagamentoRepositoryMock;
-    private readonly Mock<ILogger<CriarPagamentoRequestHandler>> _loggerMock;
-    private readonly CriarPagamentoRequestHandler _handler;
+    private readonly IDividaRepository _dividaRepository = Substitute.For<IDividaRepository>();
+    private readonly ICredorRepository _credorRepository = Substitute.For<ICredorRepository>();
+    private readonly IPagamentoRepository _pagamentoRepository = Substitute.For<IPagamentoRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
+    private readonly ILogger<CriarPagamentoRequestHandler> _logger = Substitute.For<ILogger<CriarPagamentoRequestHandler>>();
+    private readonly CriarPagamentoRequestHandler _sut;
 
     public CriarPagamentoRequestHandlerTests()
     {
-        _credorRepositoryMock = new Mock<ICredorRepository>();
-        _pagamentoRepositoryMock = new Mock<IPagamentoRepository>();
-        _loggerMock = new Mock<ILogger<CriarPagamentoRequestHandler>>();
-        _handler = new CriarPagamentoRequestHandler(_pagamentoRepositoryMock.Object, _credorRepositoryMock.Object, _loggerMock.Object);
+        _sut = new CriarPagamentoRequestHandler(_pagamentoRepository, _credorRepository, _dividaRepository, _logger, _unitOfWork);
     }
 
     [Fact]
-    public async Task Handle_CredorExistente_DeveCriarPagamentoERetornarSucesso()
+    public async Task Handle_DeveCriarPagamentoComSucesso()
     {
         // Arrange
-        var credorId = 1;
-        var pagamentoId = 100;
-        var credor = new CredorEntity { Id = credorId };
         var request = new CriarPagamentoRequest
         {
-            IdCredor = credorId,
-            Valor = 500.0,
+            IdDivida = 1,
+            Valor = 100,
             DataDePagamento = DateTime.Now,
             DataDeVencimento = DateTime.Now.AddDays(30)
         };
 
-        _credorRepositoryMock.Setup(repo => repo.ObterCredorAsync(credorId))
-            .ReturnsAsync(credor);
-        _pagamentoRepositoryMock.Setup(repo => repo.CriarPagamentoAsync(It.IsAny<PagamentoEntity>()))
-            .ReturnsAsync((PagamentoEntity pagamento) =>
-            {
-                pagamento.Id = pagamentoId;
-                return pagamento;
-            });
+        var dividaEntity = new DividaEntity
+        {
+            Id = 1,
+            IdCredor = 1,
+            Valor = request.Valor,
+            DividaAberta = true
+        };
+
+        var credorEntity = new CredorEntity { Id = 1 };
+
+        _dividaRepository.ObterDividaAsync(request.IdDivida)
+            .Returns(dividaEntity);
+        _credorRepository.ObterCredorAsync(dividaEntity.IdCredor)
+            .Returns(credorEntity);
+        _pagamentoRepository.QuitarPagamentoAsync(dividaEntity)
+            .Returns(dividaEntity);
+        _pagamentoRepository.CriarPagamentoAsync(Arg.Any<PagamentoEntity>())
+            .Returns(new PagamentoEntity { Id = 1, Valor = request.Valor });
 
         // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
+        var result = await _sut.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(pagamentoId, result.Value.idPagamento);
-        Assert.Equal(request.Valor, result.Value.valor);
-        _credorRepositoryMock.Verify(repo => repo.ObterCredorAsync(credorId), Times.Once);
-        _pagamentoRepositoryMock.Verify(repo => repo.CriarPagamentoAsync(It.IsAny<PagamentoEntity>()), Times.Once);
+        result.Should().BeOfType<Result<CriarPagamentoResponse>>().Which
+            .Value.valor.Should().Be(request.Valor);
+        await _dividaRepository.Received(1).ObterDividaAsync(request.IdDivida);
+        await _credorRepository.Received(1).ObterCredorAsync(dividaEntity.IdCredor);
+        await _pagamentoRepository.Received(1).QuitarPagamentoAsync(dividaEntity);
+        await _pagamentoRepository.Received(1).CriarPagamentoAsync(Arg.Any<PagamentoEntity>());
+        await _unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
     }
 
     [Fact]
-    public async Task Handle_CredorNaoExistente_DeveRetornarErro()
+    public async Task Handle_QuandoValorPagamentoIncompativel_DeveRetornarErro()
     {
         // Arrange
-        var credorId = 1;
         var request = new CriarPagamentoRequest
         {
-            IdCredor = credorId,
-            Valor = 500.0,
+            IdDivida = 1,
+            Valor = 100,
             DataDePagamento = DateTime.Now,
             DataDeVencimento = DateTime.Now.AddDays(30)
         };
 
-        _credorRepositoryMock.Setup(repo => repo.ObterCredorAsync(credorId))
-            .ReturnsAsync((CredorEntity)null);
+        var dividaEntity = new DividaEntity
+        {
+            Id = 1,
+            IdCredor = 1,
+            Valor = request.Valor + 10, // Valor incompatível
+            DividaAberta = true
+        };
+
+        _dividaRepository.ObterDividaAsync(request.IdDivida)
+            .Returns(dividaEntity);
 
         // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
+        var result = await _sut.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.IsType<ExcecaoAplicacao>(result.Exception);
-        var excecaoAplicacao = Assert.IsType<ExcecaoAplicacao>(result.Exception);
-        Assert.Equal(CredorErrors.CredorInexistente, excecaoAplicacao.ResponseErro);
-        _credorRepositoryMock.Verify(repo => repo.ObterCredorAsync(credorId), Times.Once);
-        _pagamentoRepositoryMock.Verify(repo => repo.CriarPagamentoAsync(It.IsAny<PagamentoEntity>()), Times.Never);
+        result.Should().BeOfType<Result<CriarPagamentoResponse>>().Which
+            .Value.Should().BeNull();
     }
 
+    [Fact]
+    public async Task Handle_QuandoErroAoQuitarPagamento_DeveRetornarErro()
+    {
+        // Arrange
+        var request = new CriarPagamentoRequest
+        {
+            IdDivida = 1,
+            Valor = 100,
+            DataDePagamento = DateTime.Now,
+            DataDeVencimento = DateTime.Now.AddDays(30)
+        };
+
+        var dividaEntity = new DividaEntity
+        {
+            Id = 1,
+            IdCredor = 1,
+            Valor = request.Valor,
+            DividaAberta = true
+        };
+
+        _dividaRepository.ObterDividaAsync(request.IdDivida)
+            .Returns(dividaEntity);
+        _pagamentoRepository.QuitarPagamentoAsync(dividaEntity)
+            .Returns((DividaEntity)null); // Simula erro ao quitar pagamento
+
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<Result<CriarPagamentoResponse>>().Which
+            .Value.Should().BeNull();
+    }
 }

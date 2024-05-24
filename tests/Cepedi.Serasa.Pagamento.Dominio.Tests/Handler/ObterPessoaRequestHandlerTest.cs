@@ -1,66 +1,65 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
 using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
+using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
 using Cepedi.Serasa.Pagamento.Dominio;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
+using Cepedi.Serasa.Pagamento.Dominio.Repositorio.Queries;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NSubstitute;
+using OperationResult;
 
 namespace Cepedi.Serasa.Pessoa.Dominio.Tests;
 
-public class ObterPessoaRequestHandlerTest
+public class ObterPessoaRequestHandlerTests
 {
-    [Fact]
-    public async Task Handle_ShouldReturnSuccess_WhenPessoaFound()
+    private readonly IPessoaQueryRepository _pessoaQueryRepository = Substitute.For<IPessoaQueryRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
+    private readonly ILogger<ObterPessoaRequestHandler> _logger = Substitute.For<ILogger<ObterPessoaRequestHandler>>();
+    private readonly ObterPessoaRequestHandler _sut;
+
+    public ObterPessoaRequestHandlerTests()
     {
-        // Arrange
-        var fixture = new ObterPessoaResquestHandlerTestsFixture();
-        var request = new ObterPessoaRequest { Id = 4 };
-        var expectedValor = "Teste3";
-        // var expectedCpf = "022222222222";
-        fixture.MockPessoaRepository.Setup(r => r.ObterPessoaAsync(request.Id))
-            .ReturnsAsync(new PessoaEntity { Nome = expectedValor });
-
-        var handler = new ObterPessoaRequestHandler(fixture.MockLogger.Object, fixture.MockPessoaRepository.Object);
-
-        // Act
-        var result = await handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
-        Assert.Equal(expectedValor, result.Value.Nome);
+        _sut = new ObterPessoaRequestHandler(_logger, _pessoaQueryRepository, _unitOfWork);
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenPessoaNotFound()
+    public async Task Handle_DeveRetornarPessoaComSucesso()
     {
         // Arrange
-        var fixture = new ObterPessoaResquestHandlerTestsFixture();
         var request = new ObterPessoaRequest { Id = 1 };
-        fixture.MockPessoaRepository.Setup(r => r.ObterPessoaAsync(request.Id))
-            .ReturnsAsync((PessoaEntity)null);
+        var pessoaEntity = new PessoaEntity { Id = 1, Nome = "Nome da Pessoa" };
 
-        var handler = new ObterPessoaRequestHandler(fixture.MockLogger.Object, fixture.MockPessoaRepository.Object);
+        _pessoaQueryRepository.ObterPessoasDapperAsync(request.Id)
+            .Returns(pessoaEntity);
 
         // Act
-        var result = await handler.Handle(request, CancellationToken.None);
+        var result = await _sut.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.IsType<SemResultadosException>(result.Exception);
+        result.Should().BeOfType<Result<ObterPessoaResponse>>().Which
+            .Value.Nome.Should().Be(pessoaEntity.Nome);
+        await _pessoaQueryRepository.Received(1).ObterPessoasDapperAsync(request.Id);
+        await _unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
     }
-}
 
-public class ObterPessoaResquestHandlerTestsFixture
-{
-    public Mock<IPessoaRepository> MockPessoaRepository { get; }
-    public Mock<ILogger<ObterPessoaRequestHandler>> MockLogger { get; }
-
-    public ObterPessoaResquestHandlerTestsFixture()
+    [Fact]
+    public async Task Handle_QuandoPessoaNaoEncontrada_DeveRetornarErro()
     {
-        MockPessoaRepository = new Mock<IPessoaRepository>();
-        MockLogger = new Mock<ILogger<ObterPessoaRequestHandler>>();
+        // Arrange
+        var request = new ObterPessoaRequest { Id = 1 };
+
+        _pessoaQueryRepository.ObterPessoasDapperAsync(request.Id)
+            .Returns((PessoaEntity)null);
+
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<Result<ObterPessoaResponse>>().Which
+            .Value.Should().BeNull();
+        await _unitOfWork.DidNotReceive().SaveChangesAsync(CancellationToken.None);
     }
 }

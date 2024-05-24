@@ -1,6 +1,8 @@
 ﻿
+using Cepedi.Serasa.Pagamento.Compartilhado.Enums;
 using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
 using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
+using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Handlers;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
@@ -15,25 +17,49 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 public class AtualizarCredorRequestHandlerTests
 {
     private readonly ICredorRepository _credorRepository = Substitute.For<ICredorRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
     private readonly ILogger<AtualizarCredorRequestHandler> _logger = Substitute.For<ILogger<AtualizarCredorRequestHandler>>();
     private readonly AtualizarCredorRequestHandler _sut;
 
-    public AtualizarCredorRequestHandlerTests(){
-        _sut = new AtualizarCredorRequestHandler(_credorRepository, _logger);
-    }
-    [Fact]
-    public async Task AtualizarCredor_DeveRetornarSucesso()
+    public AtualizarCredorRequestHandlerTests()
     {
-        var credor = new AtualizarCredorRequest { Id = 1, Nome = "NovoNome" };
-        var credorEntity = new CredorEntity { Id = 1, Nome = "NovoNome" };
-        _credorRepository.ObterCredorAsync(It.IsAny<int>()).ReturnsForAnyArgs(new CredorEntity());
-        _credorRepository.AtualizarCredorAsync(It.IsAny<CredorEntity>()).ReturnsForAnyArgs(credorEntity);
+        _sut = new AtualizarCredorRequestHandler(_credorRepository, _logger, _unitOfWork);
+    }
 
-        var result = await _sut.Handle(credor, CancellationToken.None);
-        result.Should().BeOfType<Result<AtualizarCredorResponse>>().Which
-            .Value.nome.Should().Be(credor.Nome);
+    [Fact]
+    public async Task Handle_QuandoCredorExistente_DeveRetornarSucesso()
+    {
+        // Arrange
+        var request = new AtualizarCredorRequest { Id = 1, Nome = "Novo Nome" };
+        var credorEntity = new CredorEntity { Id = 1, Nome = "Nome Antigo" };
+        
+        _credorRepository.ObterCredorAsync(request.Id)
+            .Returns(credorEntity);
 
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
         result.Should().BeOfType<Result<AtualizarCredorResponse>>().Which
-            .Value.nome.Should().Be(credorEntity.Nome);
+            .Value.nome.Should().Be(request.Nome);
+        await _credorRepository.Received(1).AtualizarCredorAsync(credorEntity);
+        await _unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task Handle_QuandoCredorInexistente_DeveRetornarErro()
+    {
+        // Arrange
+        var request = new AtualizarCredorRequest { Id = 1, Nome = "Novo Nome" };
+        
+        _credorRepository.ObterCredorAsync(request.Id)
+            .Returns((CredorEntity)null);
+
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<Result<AtualizarCredorResponse>>().Which
+            .Value.Should().BeNull();
     }
 }

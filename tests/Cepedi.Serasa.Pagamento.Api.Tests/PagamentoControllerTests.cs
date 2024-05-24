@@ -24,7 +24,7 @@ namespace Cepedi.Serasa.Pagamento.Api.Tests
         public async Task CriarPagamento_DeveEnviarRequest_Para_Mediator()
         {
             // Arrange
-            var request = new CriarPagamentoRequest { Valor = 100, DataDePagamento = DateTime.Now, DataDeVencimento = DateTime.Now, IdCredor = 1 };
+            var request = new CriarPagamentoRequest { Valor = 100, DataDePagamento = DateTime.Now, DataDeVencimento = DateTime.Now };
             _mediator.Send(request).ReturnsForAnyArgs(Result.Success(new CriarPagamentoResponse(1, 100)));
             // Act
             await _sut.CriarPagamentoAsync(request);

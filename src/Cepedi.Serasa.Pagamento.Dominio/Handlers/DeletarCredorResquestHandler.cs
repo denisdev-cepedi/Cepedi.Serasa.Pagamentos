@@ -11,11 +11,13 @@ public class DeletarCredorRequestHandler :
     IRequestHandler<DeletarCredorRequest, Result<DeletarCredorResponse>>
 {
     private readonly ICredorRepository _credorRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<DeletarCredorRequestHandler> _logger;
 
-    public DeletarCredorRequestHandler(ICredorRepository CredorRepository, ILogger<DeletarCredorRequestHandler> logger)
+    public DeletarCredorRequestHandler(ICredorRepository CredorRepository, ILogger<DeletarCredorRequestHandler> logger, IUnitOfWork unitOfWork)
     {
         _credorRepository = CredorRepository;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -30,6 +32,7 @@ public class DeletarCredorRequestHandler :
         }
 
         await _credorRepository.DeletarCredorAsync(CredorEntity.Id);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(new DeletarCredorResponse(CredorEntity.Id));
 

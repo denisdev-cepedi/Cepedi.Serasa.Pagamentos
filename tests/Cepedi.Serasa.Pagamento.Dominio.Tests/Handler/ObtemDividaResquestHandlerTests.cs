@@ -11,58 +11,50 @@ namespace Cepedi.Serasa.Pagamento.Dominio.Tests;
 
 public class ObtemDividaResquestHandlerTests
 {
-    [Fact]
-    public async Task Handle_ShouldReturnSuccess_WhenDividaFound()
+    private readonly IDividaRepository _dividaRepository = Substitute.For<IDividaRepository>();
+    private readonly ILogger<ObtemDividaResquestHandler> _logger = Substitute.For<ILogger<ObtemDividaResquestHandler>>();
+    private readonly ObtemDividaResquestHandler _sut;
+
+    public ObtemDividaResquestHandlerTests()
     {
-        // Arrange
-        var fixture = new ObtemDividaResquestHandlerTestsFixture();
-        var request = new ObtemDividaRequest { Id = 1 };
-        var expectedValor = 100.50;
-        var expectedDataDeVencimento = new DateTime(2024, 06, 15);
-        fixture.MockDividaRepository.Setup(r => r.ObterDividaAsync(request.Id))
-            .ReturnsAsync(new DividaEntity { Valor = expectedValor, DataDeVencimento = expectedDataDeVencimento });
-
-        var handler = new ObtemDividaResquestHandler(fixture.MockDividaRepository.Object, fixture.MockLogger.Object);
-
-        // Act
-        var result = await handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
-        Assert.Equal(expectedValor, result.Value.Valor);
-        Assert.Equal(expectedDataDeVencimento, result.Value.DataDeVencimento);
+        _sut = new ObtemDividaResquestHandler(_dividaRepository, _logger);
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenDividaNotFound()
+    public async Task Handle_DeveRetornarDividaComSucesso()
     {
         // Arrange
-        var fixture = new ObtemDividaResquestHandlerTestsFixture();
         var request = new ObtemDividaRequest { Id = 1 };
-        fixture.MockDividaRepository.Setup(r => r.ObterDividaAsync(request.Id))
-            .ReturnsAsync((DividaEntity)null);
+        var dividaEntity = new DividaEntity { Id = 1, Valor = 100, DataDeVencimento = DateTime.Now.AddDays(30) };
 
-        var handler = new ObtemDividaResquestHandler(fixture.MockDividaRepository.Object, fixture.MockLogger.Object);
+        _dividaRepository.ObterDividaAsync(request.Id)
+            .Returns(dividaEntity);
 
         // Act
-        var result = await handler.Handle(request, CancellationToken.None);
+        var result = await _sut.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.IsType<SemResultadosException>(result.Exception);
+        result.Should().BeOfType<Result<ObtemDividaResponse>>().Which
+            .Value.Valor.Should().Be(dividaEntity.Valor);
+        result.Should().BeOfType<Result<ObtemDividaResponse>>().Which
+            .Value.DataDeVencimento.Should().Be(dividaEntity.DataDeVencimento);
+        await _dividaRepository.Received(1).ObterDividaAsync(request.Id);
     }
 
-}
-
-public class ObtemDividaResquestHandlerTestsFixture
-{
-    public Mock<IDividaRepository> MockDividaRepository { get; }
-    public Mock<ILogger<ObtemDividaResquestHandler>> MockLogger { get; }
-
-    public ObtemDividaResquestHandlerTestsFixture()
+    [Fact]
+    public async Task Handle_QuandoDividaNaoEncontrada_DeveRetornarErro()
     {
-        MockDividaRepository = new Mock<IDividaRepository>();
-        MockLogger = new Mock<ILogger<ObtemDividaResquestHandler>>();
+        // Arrange
+        var request = new ObtemDividaRequest { Id = 1 };
+
+        _dividaRepository.ObterDividaAsync(request.Id)
+            .Returns((DividaEntity)null);
+
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<Result<ObtemDividaResponse>>().Which
+            .Value.Should().BeNull();
     }
 }

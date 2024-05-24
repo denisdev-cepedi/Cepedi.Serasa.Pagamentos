@@ -28,9 +28,10 @@ public class CriarPagamentoRequestHandler
 
     public async Task<Result<CriarPagamentoResponse>> Handle(CriarPagamentoRequest request, CancellationToken cancellationToken)
     {
-        var credorEntity = await _credorRepository.ObterCredorAsync(request.IdCredor);
 
         var dividaEntity = await _dividaRepository.ObterDividaAsync(request.IdDivida);
+
+        var credorEntity = await _credorRepository.ObterCredorAsync(dividaEntity.IdCredor);
 
         var pagamento = new PagamentoEntity()
         {
@@ -40,7 +41,7 @@ public class CriarPagamentoRequestHandler
 
             DataDeVencimento = request.DataDeVencimento,
 
-            IdCredor = request.IdCredor,
+            IdCredor = dividaEntity.IdCredor,
 
             Credor = credorEntity
         };
@@ -71,3 +72,5 @@ public class CriarPagamentoRequestHandler
         return Result.Success(new CriarPagamentoResponse(pagamento.Id, pagamento.Valor));
     }
 }
+
+

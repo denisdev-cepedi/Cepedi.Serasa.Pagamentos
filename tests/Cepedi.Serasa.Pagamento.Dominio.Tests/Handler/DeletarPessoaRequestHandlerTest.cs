@@ -1,62 +1,66 @@
 ﻿using Cepedi.Serasa.Pagamento.Compartilhado.Excecoes;
 using Cepedi.Serasa.Pagamento.Compartilhado.Requests;
+using Cepedi.Serasa.Pagamento.Compartilhado.Responses;
+using Cepedi.Serasa.Pagamento.Dados;
 using Cepedi.Serasa.Pagamento.Dominio;
 using Cepedi.Serasa.Pagamento.Dominio.Entidades;
 using Cepedi.Serasa.Pagamento.Dominio.Repositorio;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NSubstitute;
+using OperationResult;
 
 namespace Cepedi.Serasa.Pessoa.Dominio.Tests;
 
-public class DeletarPessoaRequestHandlerTest
+public class DeletarPessoaRequestHandlerTests
 {
-    private readonly Mock<IPessoaRepository> _mockPessoaRepository = new Mock<IPessoaRepository>();
-    private readonly Mock<ILogger<DeletarPessoaRequestHandler>> _mockLogger = new Mock<ILogger<DeletarPessoaRequestHandler>>();
+    private readonly IPessoaRepository _pessoaRepository = Substitute.For<IPessoaRepository>();
+    private readonly IUnitOfWork _unitOfWork = Substitute.For<IUnitOfWork>();
+    private readonly ILogger<DeletarPessoaRequestHandler> _logger = Substitute.For<ILogger<DeletarPessoaRequestHandler>>();
+    private readonly DeletarPessoaRequestHandler _sut;
 
-    [Fact]
-    public async Task Should_Delete_Pessoa_Successfully()
+    public DeletarPessoaRequestHandlerTests()
     {
-        // Arrange
-        var request = new DeletarPessoaRequest { Id = 1 };
-        var pessoaEntity = new PessoaEntity { Id = request.Id };
-
-        _mockPessoaRepository.Setup(repo => repo.ObterPessoaAsync(request.Id))
-            .Returns(Task.FromResult(pessoaEntity));
-        _mockPessoaRepository.Setup(repo => repo.DeletarPessoaAsync(pessoaEntity.Id))
-            .Returns(Task.FromResult(pessoaEntity));
-
-        var handler = new DeletarPessoaRequestHandler(_mockLogger.Object, _mockPessoaRepository.Object);
-
-        // Act
-        var result = await handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(request.Id, result.Value.Id);
-
-        _mockPessoaRepository.Verify(repo => repo.ObterPessoaAsync(request.Id), Times.Once);
-        _mockPessoaRepository.Verify(repo => repo.DeletarPessoaAsync(pessoaEntity.Id), Times.Once);
+        _sut = new DeletarPessoaRequestHandler(_logger, _pessoaRepository, _unitOfWork);
     }
 
     [Fact]
-    public async Task Should_Return_Error_If_Pessoa_Not_Found()
+    public async Task Handle_DeveDeletarPessoaComSucesso()
     {
         // Arrange
-        var request = new DeletarPessoaRequest { Id = 111 };
+        var request = new DeletarPessoaRequest { Id = 1 };
 
-        _mockPessoaRepository.Setup(repo => repo.ObterPessoaAsync(request.Id))
-            .Returns(Task.FromResult<PessoaEntity>(null));
+        var pessoaEntity = new PessoaEntity { Id = 1 };
 
-        var handler = new DeletarPessoaRequestHandler(_mockLogger.Object, _mockPessoaRepository.Object);
+        _pessoaRepository.ObterPessoaAsync(request.Id)
+            .Returns(pessoaEntity);
 
         // Act
-        var result = await handler.Handle(request, CancellationToken.None);
+        var result = await _sut.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess == false);
-        Assert.IsType<SemResultadosException>(result.Exception);
+        result.Should().BeOfType<Result<DeletarPessoaResponse>>().Which
+            .Value.Id.Should().Be(request.Id);
+        await _pessoaRepository.Received(1).ObterPessoaAsync(request.Id);
+        await _pessoaRepository.Received(1).DeletarPessoaAsync(request.Id);
+        await _unitOfWork.Received(1).SaveChangesAsync(CancellationToken.None);
+    }
 
-        _mockPessoaRepository.Verify(repo => repo.ObterPessoaAsync(request.Id), Times.Once);
-        _mockPessoaRepository.Verify(repo => repo.DeletarPessoaAsync(It.IsAny<int>()), Times.Never); // Deletion not called
+    [Fact]
+    public async Task Handle_QuandoPessoaNaoEncontrada_DeveRetornarErro()
+    {
+        // Arrange
+        var request = new DeletarPessoaRequest { Id = 1 };
+
+        _pessoaRepository.ObterPessoaAsync(request.Id)
+            .Returns((PessoaEntity)null);
+
+        // Act
+        var result = await _sut.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<Result<DeletarPessoaResponse>>().Which
+            .Value.Should().BeNull();
     }
 }
