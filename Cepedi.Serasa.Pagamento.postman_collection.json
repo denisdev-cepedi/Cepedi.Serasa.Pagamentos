@@ -30,13 +30,13 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                            "raw": "{{base_url}}/Pessoa/3",
+                            "raw": "{{base_url}}/Pessoa/1",
                             "host": [
                                 "{{base_url}}"
                             ],
                             "path": [
                                 "Pessoa",
-                                "3"
+                                "1"
                             ]
                         },
                         "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -65,7 +65,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"nome\": \"Teste\",\n  \"cpf\": \"666666666666\"\n}",
+                            "raw": "{\n  \"nome\": \"Denis\",\n  \"cpf\": \"44444444444\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -101,7 +101,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"id\": 1,\n  \"nome\": \"eeee\"\n}",
+                            "raw": "{\n  \"id\": 16,\n  \"nome\": \"Zaca\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -109,12 +109,10 @@
                             }
                         },
                         "url": {
-                            "raw": "http://localhost:5078/Pessoa",
-                            "protocol": "http",
+                            "raw": "{{base_url}}/Pessoa",
                             "host": [
-                                "localhost"
+                                "{{base_url}}"
                             ],
-                            "port": "5078",
                             "path": [
                                 "Pessoa"
                             ]
@@ -133,15 +131,13 @@
                             }
                         ],
                         "url": {
-                            "raw": "http://localhost:5078/Pessoa/13",
-                            "protocol": "http",
+                            "raw": "{{base_url}}/Pessoa/16",
                             "host": [
-                                "localhost"
+                                "{{base_url}}"
                             ],
-                            "port": "5078",
                             "path": [
                                 "Pessoa",
-                                "13"
+                                "16"
                             ]
                         }
                     },
@@ -168,7 +164,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"nome\": \"teste2\"\n}",
+                            "raw": "{\n  \"nome\": \"Denis Cepedi\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -198,7 +194,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/Credor?Id=2",
+                            "raw": "{{base_url}}/Credor?Id=8",
                             "host": [
                                 "{{base_url}}"
                             ],
@@ -208,7 +204,7 @@
                             "query": [
                                 {
                                     "key": "Id",
-                                    "value": "2"
+                                    "value": "8"
                                 }
                             ]
                         }
@@ -231,7 +227,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"id\": 2,\n  \"nome\": \"Antonio2\"\n}",
+                            "raw": "{\n  \"id\": 8,\n  \"nome\": \"Zaca\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -261,7 +257,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/Credor?Id=5",
+                            "raw": "{{base_url}}/Credor?Id=8",
                             "host": [
                                 "{{base_url}}"
                             ],
@@ -271,7 +267,7 @@
                             "query": [
                                 {
                                     "key": "Id",
-                                    "value": "5"
+                                    "value": "8"
                                 }
                             ]
                         }
@@ -294,13 +290,13 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/Divida/1",
+                            "raw": "{{base_url}}/Divida/13",
                             "host": [
                                 "{{base_url}}"
                             ],
                             "path": [
                                 "Divida",
-                                "1"
+                                "13"
                             ]
                         }
                     },
@@ -322,7 +318,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"id\": 8,\n  \"valor\": 20000,\n  \"dataDeVencimento\": \"2024-05-18T16:43:28.817Z\"\n}",
+                            "raw": "{\n  \"id\": 11,\n  \"valor\": 20000,\n  \"dataDeVencimento\": \"2024-05-18T16:43:28.817Z\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -357,7 +353,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"valor\": 5000,\n  \"dataDeVencimento\": \"2024-05-18T16:46:02.311Z\",\n  \"idPessoa\": 1,\n  \"idCredor\": 1\n}",
+                            "raw": "{\n  \"valor\": 10000,\n  \"dataDeVencimento\": \"2024-05-18T16:46:02.311Z\",\n  \"idPessoa\": 16,\n  \"idCredor\": 8\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -387,15 +383,13 @@
                             }
                         ],
                         "url": {
-                            "raw": "http://localhost:5078/Divida/3",
-                            "protocol": "http",
+                            "raw": "{{base_url}}/Divida/11",
                             "host": [
-                                "localhost"
+                                "{{base_url}}"
                             ],
-                            "port": "5078",
                             "path": [
                                 "Divida",
-                                "3"
+                                "11"
                             ]
                         }
                     },
@@ -422,7 +416,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"valor\": 1000,\n  \"dataDePagamento\": \"2024-05-18T16:48:02.631Z\",\n  \"dataDeVencimento\": \"2024-05-18T16:48:02.631Z\",\n  \"idCredor\": 1,\n  \"idDivida\" : 1\n}",
+                            "raw": "{\n  \"valor\": 10000,\n  \"dataDePagamento\": \"2024-05-18T16:48:02.631Z\",\n  \"dataDeVencimento\": \"2024-05-18T16:48:02.631Z\",\n  \"idDivida\" : 13\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -510,13 +504,13 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/Pagamento/0",
+                            "raw": "{{base_url}}/Pagamento/4",
                             "host": [
                                 "{{base_url}}"
                             ],
                             "path": [
                                 "Pagamento",
-                                "0"
+                                "4"
                             ]
                         }
                     },
